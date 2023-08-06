@@ -1,0 +1,55 @@
+@using StockSim.Frontend.Models
+@using StockSim.Frontend.Services
+@using StockSim.Frontend.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+
+<div id="wrapper">
+    <div id="trading-wrapper">
+        <EditForm Model="_stock" OnValidSubmit="Valid" class="form">
+            <DataAnnotationsValidator />
+            <button @onclick="() => _buttonState = !_buttonState">@((_buttonState) ? "SELL" : "BUY")</button>
+            <h4>@(_buttonState ? "BUY STOCKS" : "SELL STOCKS")</h4>
+            <label class="input-label" for="symbol">Stock</label>
+            <InputText id="symbol" @bind-Value="_stock.Symbol" />
+            <ValidationMessage For="() => _stock.Symbol" />
+            <label class="input-label" for="quantity">Quantity</label>
+            <InputNumber id="quantity" @bind-Value="_stock.Quantity" />
+            <ValidationMessage For="() => _stock.Quantity" />
+            <input id="submit" type="submit" />
+        </EditForm>
+    </div>
+</div>
+
+<style>
+    body {
+        margin: 0;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    #wrapper {
+        height: 100vh;
+        width: 100vw;
+        opacity: 0.2;
+    }
+    #trading-wrapper {
+        height: 100vh;
+        width: 50vw;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public EventCallback<TradingMenuDto> OnBuy { get; set; }
+    [Parameter]
+    public EventCallback<TradingMenuDto> OnSell { get; set; }
+    private TradingMenuDto _stock = new();
+    private bool _buttonState = true; // buy = true, sell = false
+    private async Task Valid() {
+        if (_buttonState) {
+            await OnBuy.InvokeAsync(_stock);
+        } else {
+            await OnSell.InvokeAsync(_stock);
+        }
+    }
+}

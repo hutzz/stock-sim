@@ -1,0 +1,95 @@
+﻿@page "/login"
+@using StockSim.Frontend.Models
+@using StockSim.Frontend.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+@using System.Text.Json
+@inject NavigationManager NavigationManager
+@inject ILoginService LoginService
+@inject ITokenService TokenService
+
+<PageTitle>Log In</PageTitle>
+
+<h3>Log In</h3>
+
+<div id="wrapper">
+    <div id="text-wrapper">
+        <EditForm Model="@user" OnValidSubmit="Valid" OnInvalidSubmit="Invalid" class="form">
+            <DataAnnotationsValidator />
+            <label class="input-label" for="username">Username</label>
+            <InputText id="username" @bind-Value="user.Username" required />
+            <ValidationMessage For="() => user.Username" />
+            <label class="input-label" for="password">Password</label>
+            <InputText id="password" type="password" @bind-Value="user.Password" required />
+            <ValidationMessage For="() => user.Password" />
+            <input id="submit" type="submit" />
+        </EditForm>
+    </div>
+    <div>
+        @if (!string.IsNullOrEmpty(message)) {
+            <div class="validation-message">@message</div>
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        margin: 0;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    .title {
+        text-align: center;
+    }
+
+    #wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 25vh;
+        background-color: white;
+        align-items: center;
+        justify-content: center;
+        -ms-flex-align: center;
+        margin-top: 10vh;
+    }
+
+    #text-wrapper {
+        width: 15vw;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .input-label {
+        margin-top: 2.5vh;
+    }
+</style>
+
+@code {
+    private LoginModel user = new();
+    private string message = "";
+
+    private async Task Valid() {
+        try {
+            var result = await LoginService.Login(user);
+            await TokenService.StoreTokensAsync(result);
+            message = $"Successfully logged in! Token: {await TokenService.GetAccessTokenAsync()}";
+            StateHasChanged();
+            NavigationManager.NavigateTo("/dashboard", true);
+        }
+        catch (Exception e) {
+            message = e.Message;
+        }
+    }
+    private void Invalid() {
+        message = "fuck";
+        StateHasChanged();
+    }
+    private void RedirectToDashboard() {
+        NavigationManager.NavigateTo("/dashboard");
+    }
+}

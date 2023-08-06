@@ -1,0 +1,132 @@
+﻿@page "/dashboard"
+@attribute [Authorize]
+@using StockSim.Frontend.Models
+@using StockSim.Frontend.Services
+@using StockSim.Frontend.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+@inject IStockService StockService
+@inject ITokenService TokenService
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+
+<h3>Dashboard</h3>
+
+<AuthorizeView>
+    <Authorized>
+        <button @onclick="async() => await LoadUserData()">Refresh</button>
+        <div>
+            <h2>@user.Username</h2>
+            <h2>@user.Id</h2>
+            <h2>$@Math.Round(user.Balance, 2).ToString("F2")</h2>
+            <br />
+        </div>
+        <div>
+            <button @onclick="() => _toggleTradingMenu = !_toggleTradingMenu">Trade Stocks</button>
+        </div>
+        @if (_toggleTradingMenu) {
+            <TradingMenu OnBuy="@HandleTradingMenuBuy" OnSell="@HandleTradingMenuSell" />
+        }
+        <div>
+            @if (userStocks.Count > 0) {
+                @foreach (var stock in userStocks) {
+                    <h3>@stock.Symbol</h3>
+                    <h3>Value: $@Math.Round((stock.Price * stock.Quantity), 2).ToString("F2") ($@Math.Round(stock.Price, 2).ToString("F2") each)</h3>
+                    <h3>Quantity: @stock.Quantity</h3>
+                    <Buy Symbol="@stock.Symbol" OnBuy="@HandleBuy" />
+                    <Sell Symbol="@stock.Symbol" OnSell="@HandleSell" />
+                    <br />
+                }
+            } else {
+                <h3>You do not have any stocks.</h3>
+            }
+        </div>
+        <div>
+        @if (!string.IsNullOrEmpty(_message)) {
+            <div class="validation-message">@_message</div>
+        }
+    </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private UserModel user = new();
+    private List<UserStockModel> userStocks = new();
+    private string _message = "";
+    private bool _toggleTradingMenu = false;
+    protected override async Task OnInitializedAsync() {
+        base.OnInitialized();
+        StateHasChanged();
+        await LoadUserData();
+    }
+    private async Task LoadUserData() {
+        try {
+            var token = await TokenService.GetAccessTokenAsync();
+            if (TokenService.GetJwtExpiryTime(token) <= DateTime.UtcNow) {
+                await TokenService.RefreshTokens();
+                token = await TokenService.GetAccessTokenAsync();
+            }
+            user = await UserService.GetUserData(token);
+            userStocks = await StockService.GetUserStockList(token);
+            StateHasChanged();
+        }
+        catch(Exception) {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+    private async Task HandleBuy(BuySellDto stock) {
+        await TokenService.CheckToken();
+        try {
+            var token = await TokenService.GetAccessTokenAsync();
+            var response = await StockService.BuyStock(token, stock);
+            await ShowMessage(response.Msg!);
+            StateHasChanged();
+        }
+        catch (Exception e) {
+            await ShowMessage(e.Message);
+        }
+    }
+    private async Task HandleTradingMenuBuy(TradingMenuDto stock) {
+        await TokenService.CheckToken();
+        try {
+            var token = await TokenService.GetAccessTokenAsync();
+            var response = await StockService.BuyStock(token, stock);
+            await ShowMessage(response.Msg!);
+            StateHasChanged();
+        }
+        catch (Exception e) {
+            await ShowMessage(e.Message);
+        }
+    }
+    private async Task HandleSell(BuySellDto stock) {
+        await TokenService.CheckToken();
+        try {
+            var token = await TokenService.GetAccessTokenAsync();
+            var response = await StockService.SellStock(token, stock);
+            await ShowMessage(response.Msg!);
+            StateHasChanged();
+        }
+        catch (Exception e) {
+            await ShowMessage(e.Message);
+        }
+    }
+    private async Task HandleTradingMenuSell(TradingMenuDto stock) {
+        await TokenService.CheckToken();
+        try {
+            var token = await TokenService.GetAccessTokenAsync();
+            var response = await StockService.SellStock(token, stock);
+            await ShowMessage(response.Msg!);
+            StateHasChanged();
+        }
+        catch (Exception e) {
+            await ShowMessage(e.Message);
+        }
+    }
+    private async Task ShowMessage(string message) {
+        _message = message;
+        StateHasChanged();
+        await Task.Delay(3000);
+        message = "";
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,92 @@
+﻿@page "/register"
+@using StockSim.Frontend.Models
+@using StockSim.Frontend.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+@using System.Text.Json
+@inject NavigationManager NavigationManager
+@inject IRegisterService RegisterService
+
+<PageTitle>Register</PageTitle>
+
+@* <h1 class="title">Register</h1> *@
+<div id="wrapper">
+    <div id="text-wrapper">
+        <EditForm Model="@user" OnValidSubmit="Valid" OnInvalidSubmit="Invalid">
+            <div class="form">
+                <DataAnnotationsValidator />
+                @* <label class="input-label" for="email">Email Address</label> *@
+                <div class="input-text">
+                    <InputText id="email" type="email" placeholder="Email" @bind-Value="user.Email" required />
+                </div>
+                <ValidationMessage class="validation-message" For="() => user.Email" />
+                @* <label class="input-label" for="username">Username</label> *@
+                <div class="input-text">
+                    <InputText id="username" placeholder="Username" @bind-Value="user.Username" required />
+                </div>
+                <ValidationMessage class="validation-message" For="() => user.Username" />
+                @* <label class="input-label" for="password">Password</label> *@
+                <div class="input-text">
+                    <InputText id="password" type="password" placeholder="Password" @bind-Value="user.Password" required />
+                </div>
+                <ValidationMessage class="validation-message" For="() => user.Password" />
+                @* <label class="input-label" for="confirm-password">Confirm Password</label> *@
+                <div class="input-text">
+                    <InputText id="confirm-password" type="password" placeholder="Confirm Password" @bind-Value="user.ConfirmPassword" required />
+                </div>
+                <ValidationMessage class="validation-message" For="() => user.ConfirmPassword" />
+                <input id="submit" type="submit" />
+                <div>
+                    @if (!string.IsNullOrEmpty(message)) {
+                        <div class="validation-message">@message</div>
+                    }
+                </div>
+                <div id="redirect">
+                    <button id="redirect-button" @onclick=RedirectToLogin>Already have an account? Log In</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<style>
+    :root {
+        --main-background-colour: rgb(44, 43, 43);
+        --accent-colour-1: rgb(29, 28, 28);
+        --accent-colour-2: rgb(75, 115, 227);
+        --main-font-colour: white;
+    }
+
+    .validation-message {
+        margin-top: 1%;
+    }
+
+    #wrapper {
+        background-color: var(--main-background-colour);
+    }
+</style>
+
+@code {
+    // absolute comedy
+    // https://stackoverflow.com/questions/64108983/blazor-not-discovering-new-pages-in-subfolders
+
+    private RegisterModel user = new();
+    private string message = "";
+
+    private async Task Valid() {
+        try {
+            var result = await RegisterService.Register(user);
+            message = "";
+            StateHasChanged();
+            RedirectToLogin();
+        }
+        catch (Exception e) {
+            message = e.Message;
+        }
+    }
+    private void Invalid() {
+    }
+    private void RedirectToLogin() {
+        NavigationManager.NavigateTo("/login");
+    }
+}
