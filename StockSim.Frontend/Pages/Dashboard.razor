@@ -67,10 +67,17 @@
                 token = await TokenService.GetAccessTokenAsync();
             }
             user = await UserService.GetUserData(token);
-            userStocks = await StockService.GetUserStockList(token);
+            try {
+                userStocks = await StockService.GetUserStockList(token);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
+                userStocks = new List<UserStockModel>();
+            }
             StateHasChanged();
         }
-        catch(Exception) {
+        catch(Exception e) {
+            Console.WriteLine(e);
             NavigationManager.NavigateTo("/login");
         }
     }
@@ -84,6 +91,7 @@
         }
         catch (Exception e) {
             await ShowMessage(e.Message);
+            Console.WriteLine(e);
         }
     }
     private async Task HandleTradingMenuBuy(TradingMenuDto stock) {
@@ -96,6 +104,7 @@
         }
         catch (Exception e) {
             await ShowMessage(e.Message);
+            Console.WriteLine(e);
         }
     }
     private async Task HandleSell(BuySellDto stock) {
@@ -108,6 +117,7 @@
         }
         catch (Exception e) {
             await ShowMessage(e.Message);
+            Console.WriteLine(e);
         }
     }
     private async Task HandleTradingMenuSell(TradingMenuDto stock) {
@@ -120,6 +130,7 @@
         }
         catch (Exception e) {
             await ShowMessage(e.Message);
+            Console.WriteLine(e);
         }
     }
     private async Task ShowMessage(string message) {
