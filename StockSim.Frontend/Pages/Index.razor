@@ -1,7 +1,19 @@
 ﻿@page "/"
+@using StockSim.Frontend.Components
+@inject NavigationManager NavigationManager
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+Proper page coming soon maybe
 
-Welcome to your new app.
+<button @onclick=RedirectToLogin>Login Page</button>
+<button @onclick=RedirectToDashboard>Dashboard</button>
+
+@code {
+    private void RedirectToLogin() {
+        NavigationManager.NavigateTo("/login");
+    }
+    private void RedirectToDashboard() {
+        NavigationManager.NavigateTo("/dashboard");
+    }
+}
