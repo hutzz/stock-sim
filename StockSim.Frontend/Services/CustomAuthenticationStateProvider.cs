@@ -3,10 +3,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace StockSim.Frontend.Services
-{
-    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
-    {
+namespace StockSim.Frontend.Services {
+    public class CustomAuthenticationStateProvider : AuthenticationStateProvider {
         private readonly ITokenService _tokenService;
         public CustomAuthenticationStateProvider(ITokenService tokenService) {
             _tokenService = tokenService;
