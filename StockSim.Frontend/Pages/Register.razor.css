@@ -70,6 +70,7 @@ body {
 #submit:hover {
 	transform: scale(1.2);
 	background-color: var(--accent-colour-2);
+	cursor: pointer;
 }
 
 .input-label {
