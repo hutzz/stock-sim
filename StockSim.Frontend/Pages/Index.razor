@@ -8,12 +8,3 @@ Proper page coming soon maybe
 
 <button @onclick=RedirectToLogin>Login Page</button>
 <button @onclick=RedirectToDashboard>Dashboard</button>
-
-@code {
-    private void RedirectToLogin() {
-        NavigationManager.NavigateTo("/login");
-    }
-    private void RedirectToDashboard() {
-        NavigationManager.NavigateTo("/dashboard");
-    }
-}

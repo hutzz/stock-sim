@@ -9,7 +9,6 @@
 
 <PageTitle>Register</PageTitle>
 
-@* <h1 class="title">Register</h1> *@
 <div id="wrapper">
     <div id="text-wrapper">
         <EditForm Model="@user" OnValidSubmit="Valid" OnInvalidSubmit="Invalid">
@@ -40,7 +39,6 @@
             </div>
         </EditForm>
         <div id="redirect">
-            @* <button id="redirect-button" @onclick=RedirectToLogin>Already have an account? Log In</button> *@
             <p id="redirect">Already have an account? <a href="https://localhost:7003/login">Log In</a></p>
         </div>
     </div>
@@ -86,28 +84,3 @@
         color: transparent;
     }
 </style>
-
-@code {
-    // absolute comedy
-    // https://stackoverflow.com/questions/64108983/blazor-not-discovering-new-pages-in-subfolders
-
-    private RegisterModel user = new();
-    private string message = "";
-
-    private async Task Valid() {
-        try {
-            var result = await RegisterService.Register(user);
-            message = "";
-            StateHasChanged();
-            RedirectToLogin();
-        }
-        catch (Exception e) {
-            message = e.Message;
-        }
-    }
-    private void Invalid() {
-    }
-    private void RedirectToLogin() {
-        NavigationManager.NavigateTo("/login");
-    }
-}
