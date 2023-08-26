@@ -10,61 +10,70 @@
 
 <PageTitle>Log In</PageTitle>
 
-<h3>Log In</h3>
-
 <div id="wrapper">
     <div id="text-wrapper">
-        <EditForm Model="@user" OnValidSubmit="Valid" OnInvalidSubmit="Invalid" class="form">
-            <DataAnnotationsValidator />
-            <label class="input-label" for="username">Username</label>
-            <InputText id="username" @bind-Value="user.Username" required />
-            <ValidationMessage For="() => user.Username" />
-            <label class="input-label" for="password">Password</label>
-            <InputText id="password" type="password" @bind-Value="user.Password" required />
-            <ValidationMessage For="() => user.Password" />
-            <input id="submit" type="submit" />
+        <EditForm Model="@user" OnValidSubmit="Valid" OnInvalidSubmit="Invalid" >
+            <div class="form">
+                <DataAnnotationsValidator />
+                <div class="input-text">
+                    <InputText class="input" id="username" @bind-Value="user.Username" placeholder="Username" required />
+                </div>
+                <ValidationMessage class="validation-message" For="() => user.Username" />
+                <div class="input-text">
+                    <InputText class="input" id="password" type="password" @bind-Value="user.Password" placeholder="Password" required />
+                </div>
+                <ValidationMessage class="validation-message" For="() => user.Password" />
+                <input id="submit" type="submit" />
+                <div>
+                    @if (!string.IsNullOrEmpty(message)) {
+                        <div class="validation-message">@message</div>
+                    }
+                </div>
+            </div>
         </EditForm>
-    </div>
-    <div>
-        @if (!string.IsNullOrEmpty(message)) {
-            <div class="validation-message">@message</div>
-        }
+        <div>
+            <p id="redirect">Don't have an account? <a href="https://localhost:7003/register">Register</a></p>
+        </div>
     </div>
 </div>
 
 <style>
-    body {
-        margin: 0;
-        overflow-x: hidden;
-        overflow-y: scroll;
+    :root {
+        --main-background-colour: rgb(44, 43, 43);
+        --accent-colour-1: rgb(29, 28, 28);
+        --accent-colour-2: rgb(75, 115, 227);
+        --accent-colour-3: rgb(44, 62, 89);
+        --main-font-colour: white;
     }
 
-    .title {
-        text-align: center;
+    ::placeholder {
+        color: var(--main-font-colour);
+        font-size: 0.75vw;
+    }
+
+    .validation-message {
+        margin-top: 1%;
     }
 
     #wrapper {
-        display: flex;
-        flex-direction: column;
-        height: 25vh;
-        background-color: white;
-        align-items: center;
-        justify-content: center;
-        -ms-flex-align: center;
-        margin-top: 10vh;
+        background-color: var(--main-background-colour);
     }
 
-    #text-wrapper {
-        width: 15vw;
+    .input {
+        box-sizing: border-box;
+        border-radius: 16px 16px;
+        border: none;
+        outline: none;
+        width: 100%;
+        height: 100%;
+        background-color: var(--accent-colour-3);
+        padding-left: 0.5vw;
+        font-size: 0.75vw;
+        color: var(--main-font-colour);
+        caret-color: var(--main-font-colour);
     }
-
-    .form {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .input-label {
-        margin-top: 2.5vh;
+    
+    .input:focus::placeholder {
+        color: transparent;
     }
 </style>
