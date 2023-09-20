@@ -1,0 +1,46 @@
+:root {
+	--main-background-colour: rgb(44, 43, 43);
+	--accent-colour-1: rgb(29, 28, 28);
+	--accent-colour-2: rgb(75, 115, 227);
+	--accent-colour-3: rgb(44, 62, 89);
+	--main-font-colour: white;
+}
+
+#wrapper {
+	display: flex;
+	height: 100vh;
+	flex-direction: column;
+	align-items: center;
+}
+
+#welcome {
+	font-size: 1vw;
+	color: var(--main-font-colour);
+}
+
+#balance {
+	font-size: 0.75vw;
+	color: var(--main-font-colour);
+}
+
+#stock-menu-wrapper {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	justify-content: space-evenly;
+}
+
+#stock-symbol {
+	color: var(--main-font-colour);
+	font-size: 80%;
+}
+
+#quantity {
+	color: var(--main-font-colour);
+	font-size: 80%;
+}
+
+#value {
+	color: var(--main-font-colour);
+	font-size: 80%;
+}

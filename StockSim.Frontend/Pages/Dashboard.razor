@@ -10,41 +10,52 @@
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
 
-<h3>Dashboard</h3>
-
 <AuthorizeView>
     <Authorized>
-        <button @onclick="async() => await LoadUserData()">Refresh</button>
-        <div>
-            <h2>@user.Username</h2>
-            <h2>@user.Id</h2>
-            <h2>$@Math.Round(user.Balance, 2).ToString("F2")</h2>
-            <br />
-        </div>
-        <div>
-            <button @onclick="() => _toggleTradingMenu = !_toggleTradingMenu">Trade Stocks</button>
-        </div>
-        @if (_toggleTradingMenu) {
-            <TradingMenu OnBuy="@HandleTradingMenuBuy" OnSell="@HandleTradingMenuSell" />
-        }
-        <div>
-            @if (userStocks.Count > 0) {
-                @foreach (var stock in userStocks) {
-                    <h3>@stock.Symbol</h3>
-                    <h3>Value: $@Math.Round((stock.Price * stock.Quantity), 2).ToString("F2") ($@Math.Round(stock.Price, 2).ToString("F2") each)</h3>
-                    <h3>Quantity: @stock.Quantity</h3>
-                    <Buy Symbol="@stock.Symbol" OnBuy="@HandleBuy" />
-                    <Sell Symbol="@stock.Symbol" OnSell="@HandleSell" />
-                    <br />
+        <div id="wrapper">
+            <button @onclick="async() => await LoadUserData()">Refresh</button>
+            <h1 id="welcome">Welcome, @user.Username!</h1>
+            <h2 id="balance">$@Math.Round(user.Balance, 2).ToString("F2")</h2>
+            <div>
+                <button @onclick="() => _toggleTradingMenu = !_toggleTradingMenu">Trade Stocks</button>
+            </div>
+            @if (_toggleTradingMenu) {
+                <TradingMenu OnBuy="@HandleTradingMenuBuy" OnSell="@HandleTradingMenuSell" />
+            }
+            <div id="stock-menu-wrapper">
+                @if (userStocks.Count > 0) {
+                    @foreach (var stock in userStocks) {
+                        <div class="stock">
+                            <h3 id="stock-symbol">@stock.Symbol</h3>
+                            <h4 id="quantity">@stock.Quantity owned</h4>
+                            @* <h4 id="value">@((stock.Quantity > 1) ? $"${Math.Round((stock.Price * stock.Quantity), 2).ToString("F2")} (${Math.Round(stock.Price, 2).ToString("F2")} each)" : $"${Math.Round((stock.Price * stock.Quantity), 2).ToString("F2")}")</h4> *@
+                            <h4 id="value">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
+                            @* <Buy Symbol="@stock.Symbol" OnBuy="@HandleBuy" />
+                            <Sell Symbol="@stock.Symbol" OnSell="@HandleSell" /> *@
+                        </div>
+                    }
+                } else {
+                    <h3>You do not have any stocks.</h3>
                 }
-            } else {
-                <h3>You do not have any stocks.</h3>
+            </div>
+            <div>
+            @if (!string.IsNullOrEmpty(_message)) {
+                <div class="validation-message">@_message</div>
             }
         </div>
-        <div>
-        @if (!string.IsNullOrEmpty(_message)) {
-            <div class="validation-message">@_message</div>
-        }
     </div>
     </Authorized>
 </AuthorizeView>
+
+<style>
+    :root {
+        --main-background-colour: rgb(44, 43, 43);
+        --accent-colour-1: rgb(29, 28, 28);
+        --accent-colour-2: rgb(75, 115, 227);
+        --accent-colour-3: rgb(44, 62, 89);
+        --main-font-colour: white;
+    }
+    #wrapper {
+        background-color: var(--main-background-colour);
+    }
+</style>
