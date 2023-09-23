@@ -25,14 +25,14 @@
             <div id="stock-menu-wrapper">
                 @if (userStocks.Count > 0) {
                     @foreach (var stock in userStocks) {
-                        <div class="stock">
+                        <a class="stock" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
                             <h3 id="stock-symbol">@stock.Symbol</h3>
                             <h4 id="quantity">@stock.Quantity owned</h4>
                             @* <h4 id="value">@((stock.Quantity > 1) ? $"${Math.Round((stock.Price * stock.Quantity), 2).ToString("F2")} (${Math.Round(stock.Price, 2).ToString("F2")} each)" : $"${Math.Round((stock.Price * stock.Quantity), 2).ToString("F2")}")</h4> *@
                             <h4 id="value">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
                             @* <Buy Symbol="@stock.Symbol" OnBuy="@HandleBuy" />
                             <Sell Symbol="@stock.Symbol" OnSell="@HandleSell" /> *@
-                        </div>
+                        </a>
                     }
                 } else {
                     <h3>You do not have any stocks.</h3>

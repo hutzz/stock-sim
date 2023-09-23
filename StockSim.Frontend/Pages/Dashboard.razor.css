@@ -44,6 +44,13 @@
 	border: 8px solid #3720ba; /* TODO: figure out why variables don't work for borders here */
 	border-radius: 15px 15px;
 	margin: 1%;
+	text-decoration: none;
+	transition: 0.5s;
+}
+
+.stock:hover {
+	transform: scale(1.2);
+	cursor: pointer;
 }
 
 #stock-symbol {

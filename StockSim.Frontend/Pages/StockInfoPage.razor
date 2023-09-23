@@ -1,0 +1,12 @@
+@page "/stock/{symbol}"
+
+<AuthorizeView>
+    <Authorized>
+        <h1>@Symbol</h1>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public string Symbol { get; set; }
+}
