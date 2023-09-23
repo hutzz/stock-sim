@@ -41,6 +41,7 @@
 	width: 10%;
 	height: 10%;
 	background-color: var(--accent-colour-2);
+	border: 8px solid #3720ba; /* TODO: figure out why variables don't work for borders here */
 	border-radius: 15px 15px;
 	margin: 1%;
 }
