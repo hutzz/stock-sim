@@ -2,6 +2,7 @@
 
 namespace StockSim.Frontend.Models {
     public class StockModel {
+        public List<DateTime>? DateTimes { get; set; }
         public List<float>? Open { get; set; }
         public List<float>? Close { get; set; }
         public List<float>? High { get; set; }
