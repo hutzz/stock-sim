@@ -21,6 +21,20 @@ window.drawLineGraph = (labels, data) => {
 	const config = {
 		type: "line",
 		data: chartData,
+		options: {
+			scales: {
+				x: {
+					grid: {
+						color: "#38383b",
+					},
+				},
+				y: {
+					grid: {
+						color: "#38383b",
+					},
+				},
+			},
+		},
 	};
 	lineChart = new Chart(ctx, config);
 };
