@@ -1,0 +1,30 @@
+:root {
+	--main-background-colour: rgb(44, 43, 43);
+	--accent-colour-1: rgb(29, 28, 28);
+	--accent-colour-2: rgb(75, 115, 227);
+	--accent-colour-3: rgb(44, 62, 89);
+	--main-font-colour: white;
+}
+
+#wrapper {
+	display: flex;
+	height: 100vh;
+	width: 100vw;
+	flex-direction: column;
+	align-items: center;
+	overflow: hidden;
+}
+
+#symbol {
+	color: var(--main-font-colour);
+}
+
+#line-graph-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 55vh;
+	width: 55vw;
+	background-color: var(--accent-colour-1);
+	border-radius: 15px 15px;
+}
