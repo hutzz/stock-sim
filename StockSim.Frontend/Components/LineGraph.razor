@@ -1,0 +1,48 @@
+@using StockSim.Frontend.Models
+@using StockSim.Frontend.Services
+@using StockSim.Frontend.Components
+@using System.Linq
+@using Microsoft.AspNetCore.Components
+@inject IStockService StockService
+@inject ITokenService TokenService
+@inject IUserService UserService
+@inject IJSRuntime JSRuntime
+
+<div id="chart-container">
+    <canvas id="lineChart"></canvas>
+</div>
+
+@code {
+    [Parameter]
+    public List<float>? Data { get; set; }
+    [Parameter]
+    public List<string>? Labels { get; set; } 
+    private async Task DrawGraph() {
+        if (Data != null && Labels != null) {
+            await JSRuntime.InvokeVoidAsync("drawLineGraph", Labels, Data);
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            await DrawGraph();
+        }
+    }
+    protected override async Task OnParametersSetAsync() {
+        await JSRuntime.InvokeVoidAsync("updateLineGraph", Labels, Data);
+    }
+}
+
+<style>
+    :root {
+        --main-background-colour: rgb(44, 43, 43);
+        --accent-colour-1: rgb(29, 28, 28);
+        --accent-colour-2: rgb(75, 115, 227);
+        --accent-colour-3: rgb(44, 62, 89);
+        --main-font-colour: white;
+    }
+
+    #chart-container {
+        width: 50vw;
+        height: 50vh;
+    }
+</style>

@@ -1,0 +1,16 @@
+@using StockSim.Frontend.Models
+@using StockSim.Frontend.Services
+@using StockSim.Frontend.Components
+@using Microsoft.AspNetCore.Components
+@inject IStockService StockService
+@inject ITokenService TokenService
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+
+<div id="wrapper">
+    <button class="period" @onclick='async() => await SelectInterval.InvokeAsync(new StockDto() {Period="1d", Interval="1h"})'>Today</button>
+    <button class="period" @onclick='async() => await SelectInterval.InvokeAsync(new StockDto() {Period="7d", Interval="1d"})'>7d</button>
+    <button class="period" @onclick='async() => await SelectInterval.InvokeAsync(new StockDto() {Period="1mo", Interval="1d"})'>Month</button>
+    <button class="period" @onclick='async() => await SelectInterval.InvokeAsync(new StockDto() {Period="1y", Interval="1wk"})'>Year</button>
+</div>
+

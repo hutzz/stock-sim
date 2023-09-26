@@ -1,0 +1,28 @@
+:root {
+	--main-background-colour: rgb(44, 43, 43);
+	--accent-colour-1: rgb(29, 28, 28);
+	--accent-colour-2: rgb(75, 115, 227);
+	--accent-colour-3: rgb(44, 62, 89);
+	--main-font-colour: white;
+}
+
+#wrapper {
+	display: flex;
+	width: 100%;
+}
+
+.period {
+	background-color: var(--accent-colour-1);
+	color: var(--main-font-colour);
+	width: 2.5vw;
+	height: 1.5vh;
+	border: none;
+	border-radius: 8px 8px;
+	margin: 0.25%;
+	transition: 0.2s;
+}
+
+.period:hover {
+	background-color: var(--accent-colour-2);
+	cursor: pointer;
+}
