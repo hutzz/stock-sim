@@ -12,37 +12,13 @@
     <canvas id="lineChart"></canvas>
 </div>
 
-@code {
-    [Parameter]
-    public List<float>? Data { get; set; }
-    [Parameter]
-    public List<string>? Labels { get; set; } 
-    private async Task DrawGraph() {
-        if (Data != null && Labels != null) {
-            await JSRuntime.InvokeVoidAsync("drawLineGraph", Labels, Data);
-        }
-    }
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (firstRender) {
-            await DrawGraph();
-        }
-    }
-    protected override async Task OnParametersSetAsync() {
-        await JSRuntime.InvokeVoidAsync("updateLineGraph", Labels, Data);
-    }
-}
-
 <style>
+    @* removing this seemingly unused section borks everything. why? I don't know. *@
     :root {
         --main-background-colour: rgb(44, 43, 43);
         --accent-colour-1: rgb(29, 28, 28);
         --accent-colour-2: rgb(75, 115, 227);
         --accent-colour-3: rgb(44, 62, 89);
         --main-font-colour: white;
-    }
-
-    #chart-container {
-        width: 50vw;
-        height: 50vh;
     }
 </style>
