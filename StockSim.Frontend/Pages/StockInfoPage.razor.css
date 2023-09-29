@@ -19,6 +19,10 @@
 	color: var(--main-font-colour);
 }
 
+#stock-count {
+	color: var(--main-font-colour);
+}
+
 #line-graph-wrapper {
 	display: flex;
 	align-items: center;
