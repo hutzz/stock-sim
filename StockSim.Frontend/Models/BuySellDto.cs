@@ -8,7 +8,7 @@ namespace StockSim.Frontend.Models {
         public string? Symbol { get; set; }
         [Required]
         [JsonPropertyName("quantity")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid integer.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter a valid quantity.")]
         public int Quantity { get; set; }
     }
 }
