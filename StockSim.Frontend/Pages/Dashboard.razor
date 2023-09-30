@@ -30,8 +30,6 @@
                             <h4 id="quantity">@stock.Quantity owned</h4>
                             @* <h4 id="value">@((stock.Quantity > 1) ? $"${Math.Round((stock.Price * stock.Quantity), 2).ToString("F2")} (${Math.Round(stock.Price, 2).ToString("F2")} each)" : $"${Math.Round((stock.Price * stock.Quantity), 2).ToString("F2")}")</h4> *@
                             <h4 id="value">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
-                            @* <Buy Symbol="@stock.Symbol" OnBuy="@HandleBuy" />
-                            <Sell Symbol="@stock.Symbol" OnSell="@HandleSell" /> *@
                         </a>
                     }
                 } else {

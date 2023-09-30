@@ -21,6 +21,11 @@
                     <div id="line-graph-wrapper">
                         <LineGraph Labels="Model.DateTimes" Data="Model.Close" />
                     </div>
+                    <Buy Symbol="@Symbol" OnBuy="@HandleBuy" />
+                    <Sell Symbol="@Symbol" OnSell="@HandleSell" />
+                    @if (!string.IsNullOrEmpty(_message)) {
+                        <div class="validation-message">@_message</div>
+                    }
                 </div>
             </div>
         }

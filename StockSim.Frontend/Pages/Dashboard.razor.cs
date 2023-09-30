@@ -33,37 +33,11 @@ namespace StockSim.Frontend.Pages {
                 NavigationManager.NavigateTo("/login");
             }
         }
-        private async Task HandleBuy(BuySellDto stock) {
-            await TokenService.CheckToken();
-            try {
-                var token = await TokenService.GetAccessTokenAsync();
-                var response = await StockService.BuyStock(token, stock);
-                await ShowMessage(response.Msg!);
-                StateHasChanged();
-            }
-            catch (Exception e) {
-                await ShowMessage(e.Message);
-                Console.WriteLine(e);
-            }
-        }
         private async Task HandleTradingMenuBuy(TradingMenuDto stock) {
             await TokenService.CheckToken();
             try {
                 var token = await TokenService.GetAccessTokenAsync();
                 var response = await StockService.BuyStock(token, stock);
-                await ShowMessage(response.Msg!);
-                StateHasChanged();
-            }
-            catch (Exception e) {
-                await ShowMessage(e.Message);
-                Console.WriteLine(e);
-            }
-        }
-        private async Task HandleSell(BuySellDto stock) {
-            await TokenService.CheckToken();
-            try {
-                var token = await TokenService.GetAccessTokenAsync();
-                var response = await StockService.SellStock(token, stock);
                 await ShowMessage(response.Msg!);
                 StateHasChanged();
             }
