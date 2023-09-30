@@ -7,31 +7,44 @@
 @inject IStockService StockService
 
 <div>
-    <EditForm Model="@stock" OnValidSubmit="Valid" OnInvalidSubmit="Invalid" class="form">
+    <EditForm Model="@stock" OnValidSubmit="Valid" OnInvalidSubmit="Invalid" class="sell-form">
         <DataAnnotationsValidator />
-        <h4>Sell</h4>
-        <label class="input-label" for="quantity">Quantity</label>
-        <InputNumber id="quantity" @bind-Value="_quantity" />
-        <ValidationMessage For="() => stock.Quantity" />
-        <input id="submit" type="submit" />
+        <div class="sell-input-number">
+            <InputNumber class="sell-input" id="quantity" @bind-Value="_quantity" required />
+        </div>
+        <input id="sell-submit" type="submit" value="SELL" />
+        <ValidationMessage id="sell-validation-message" For="() => stock.Quantity" />
     </EditForm>
 </div>
 
-@code {
-    [Parameter]
-    public string? Symbol { get; set; }
-    [Parameter]
-    public EventCallback<BuySellDto> OnSell { get; set; }
-    private int _quantity { get; set; }
-    public BuySellDto stock = new();
-    protected override void OnInitialized() {
-        Console.WriteLine(Symbol);
+<style>
+    .sell-form {
+        margin-top: 1%;
+        display: flex;
+        align-items: center;
+        width: 50vw;
+        height: 3vh;
     }
-    private async Task Valid() {
-        stock = new() { Symbol = Symbol, Quantity = _quantity };
-        await OnSell.InvokeAsync(stock);
+
+    .sell-input {
+        box-sizing: border-box;
+        border-radius: 16px 16px;
+        border: none;
+        outline: none;
+        width: 20vw;
+        height: 3vh;
+        background-color: var(--accent-colour-3);
+        padding-left: 0.5vw;
+        font-size: 0.5vw;
+        color: var(--main-font-colour);
+        caret-color: var(--main-font-colour);
     }
-    private void Invalid() {
-        Console.WriteLine("HOW THE FUCK");
+    
+    .sell-input:focus::placeholder {
+        color: transparent;
     }
-}
+
+    #sell-validation-message {
+        margin-left: 1%;
+    }
+</style>

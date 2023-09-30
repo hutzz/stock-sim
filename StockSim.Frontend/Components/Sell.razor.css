@@ -1,0 +1,35 @@
+:root {
+	--main-background-colour: rgb(44, 43, 43);
+	--accent-colour-1: rgb(29, 28, 28);
+	--accent-colour-2: rgb(75, 115, 227);
+	--accent-colour-3: rgb(44, 62, 89);
+	--main-font-colour: white;
+}
+
+.sell-input-number {
+	display: flex;
+	flex-direction: column;
+	margin-top: 2vh;
+	width: 20vw;
+	height: 5vh;
+}
+
+#sell-submit {
+	margin-left: 1%;
+	width: 3vw;
+	height: 3vh;
+	border-radius: 16px 16px;
+	background-color: var(--accent-colour-3);
+	color: var(--main-font-colour);
+	border: none;
+	outline: none;
+	font-size: 0.5vw;
+	font-weight: bold;
+	transition: 0.5s;
+}
+
+#sell-submit:hover {
+	transform: scale(1.2);
+	background-color: var(--accent-colour-2);
+	cursor: pointer;
+}
