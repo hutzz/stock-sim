@@ -15,6 +15,8 @@ namespace StockSim.Frontend.Components {
         private async Task Valid() {
             stock = new() { Symbol = Symbol, Quantity = _quantity };
             await OnSell.InvokeAsync(stock);
+            _quantity = 0;
+            StateHasChanged();
         }
         private void Invalid() {
             Console.WriteLine("HOW THE FUCK");
