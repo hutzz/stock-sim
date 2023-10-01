@@ -90,6 +90,9 @@ namespace StockSim.Frontend.Pages {
                 Console.WriteLine(e);
             }
         }
+        private async Task HandleFail(Message error) {
+            await ShowMessage(error.Msg!);
+        }
         private async Task ShowMessage(string message) {
             _message = message;
             StateHasChanged();

@@ -22,8 +22,8 @@
                         <LineGraph Labels="Model.DateTimes" Data="Model.Close" />
                     </div>
                     <div id="buy-sell-wrapper">
-                        <Buy Symbol="@Symbol" OnBuy="@HandleBuy" />
-                        <Sell Symbol="@Symbol" OnSell="@HandleSell" />
+                        <Buy Symbol="@Symbol" OnBuy="@HandleBuy" OnFail="@HandleFail" />
+                        <Sell Symbol="@Symbol" OnSell="@HandleSell" OnFail="@HandleFail" />
                     </div>
                 </div>
                 @if (!string.IsNullOrEmpty(_message)) {
