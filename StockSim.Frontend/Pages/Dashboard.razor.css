@@ -26,6 +26,7 @@
 #stock-menu-wrapper {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	width: 90%;
 	height: 80%;
 	justify-content: space-evenly;
@@ -38,7 +39,7 @@
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-	width: 10%;
+	width: calc(10% - 10px);
 	height: 10%;
 	background-color: var(--accent-colour-2);
 	border: 8px solid #3720ba; /* TODO: figure out why variables don't work for borders here */

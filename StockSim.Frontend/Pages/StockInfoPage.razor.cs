@@ -63,6 +63,9 @@ namespace StockSim.Frontend.Pages {
             try {
                 var token = await TokenService.GetAccessTokenAsync();
                 var response = await StockService.BuyStock(token, stock);
+                _userStockCount = await UserStockCount(Symbol);
+                StockDto stockDto = new() { Symbol=Symbol, Period="1d", Interval="1h" };
+                Model = await StockService.GetStockData(stockDto);
                 await ShowMessage(response.Msg!);
                 StateHasChanged();
             }
@@ -76,6 +79,9 @@ namespace StockSim.Frontend.Pages {
             try {
                 var token = await TokenService.GetAccessTokenAsync();
                 var response = await StockService.SellStock(token, stock);
+                _userStockCount = await UserStockCount(Symbol);
+                StockDto stockDto = new() { Symbol=Symbol, Period="1d", Interval="1h" };
+                Model = await StockService.GetStockData(stockDto);
                 await ShowMessage(response.Msg!);
                 StateHasChanged();
             }
@@ -88,7 +94,7 @@ namespace StockSim.Frontend.Pages {
             _message = message;
             StateHasChanged();
             await Task.Delay(3000);
-            message = "";
+            _message = "";
             StateHasChanged();
         }
     }
