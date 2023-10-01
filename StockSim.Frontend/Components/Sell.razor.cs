@@ -7,6 +7,8 @@ namespace StockSim.Frontend.Components {
         public string? Symbol { get; set; }
         [Parameter]
         public EventCallback<BuySellDto> OnSell { get; set; }
+        [Parameter]
+        public EventCallback<Message> OnFail { get; set; }
         private int _quantity { get; set; }
         public BuySellDto stock = new();
         protected override void OnInitialized() {
@@ -18,8 +20,8 @@ namespace StockSim.Frontend.Components {
             _quantity = 0;
             StateHasChanged();
         }
-        private void Invalid() {
-            Console.WriteLine("HOW THE FUCK");
+        private async Task Invalid() {
+            await OnFail.InvokeAsync(new Message() { Msg = "An error occurred. Ensure that your input is a valid integer." });
         }
     }
 }
