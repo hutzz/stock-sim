@@ -14,8 +14,6 @@ namespace StockSim.Frontend.Pages {
                 StockDto stockDto = new() { Symbol=Symbol, Period="1d", Interval="1h" };
                 Model = await StockService.GetStockData(stockDto);
                 StateHasChanged();
-                Console.WriteLine(Model.DateTimes);
-                Console.WriteLine(Model.DateTimes?[0]);
             }
             catch (Exception e) {
                 Console.WriteLine(e);
@@ -50,8 +48,6 @@ namespace StockSim.Frontend.Pages {
                 StockDto stockDto = new() { Symbol=Symbol, Period=dto.Period, Interval=dto.Interval };
                 Model = await StockService.GetStockData(stockDto);
                 StateHasChanged();
-                Console.WriteLine(Model.Close);
-                Console.WriteLine(Model?.DateTimes?[0]);
             }
             catch (Exception e) {
                 Console.WriteLine(e);
