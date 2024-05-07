@@ -1,0 +1,8 @@
+{
+	"dependencies": {
+		"tailwindcss": "^3.4.3"
+	},
+	"scripts": {
+		"build-css": "npx tailwindcss -i StockSim.Frontend/wwwroot/css/tailwind.css -o StockSim.Frontend/wwwroot/css/main.css"
+	}
+}
