@@ -1,4 +1,4 @@
-:root {
+/* :root {
 	--main-background-colour: rgb(44, 43, 43);
 	--accent-colour-1: rgb(29, 28, 28);
 	--accent-colour-2: rgb(75, 115, 227);
@@ -42,7 +42,7 @@
 	width: calc(10% - 10px);
 	height: 10%;
 	background-color: var(--accent-colour-2);
-	border: 8px solid #3720ba; /* TODO: figure out why variables don't work for borders here */
+	border: 8px solid #3720ba; 
 	border-radius: 15px 15px;
 	margin: 1%;
 	text-decoration: none;
@@ -70,4 +70,4 @@
 	color: var(--main-font-colour);
 	font-size: 0.6vw;
 	margin: 1vw 0% 0% 0%;
-}
+} */

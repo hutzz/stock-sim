@@ -13,29 +13,28 @@
 <AuthorizeView>
     <Authorized>
         @if (!string.IsNullOrEmpty(user.Username)) {
-            <div id="wrapper">
+            <div class="flex flex-col items-center bg-gray-800 h-screen" id="wrapper">
                 <Navbar />
                 @* <button @onclick="async() => await LoadUserData()">Refresh</button> *@
-                <h1 id="welcome">Welcome, @user.Username!</h1>
-                <h2 id="balance">$@Math.Round(user.Balance, 2).ToString("F2")</h2>
+                <h1 class="text-2xl text-white text-center" id="welcome">Welcome, @user.Username!</h1>
+                <h2 class="text-xl text-white text-center" id="balance">$@Math.Round(user.Balance, 2).ToString("F2")</h2>
                 <div>
                     <button @onclick="() => _toggleTradingMenu = !_toggleTradingMenu">Trade Stocks</button>
                 </div>
                 @if (_toggleTradingMenu) {
                     <TradingMenu OnBuy="@HandleTradingMenuBuy" OnSell="@HandleTradingMenuSell" />
                 }
-                <div id="stock-menu-wrapper">
+                <div id="stock-menu-wrapper" class="grid @_gridColumnClass grid-flow-col gap-4">
                     @if (userStocks.Count > 0) {
                         @foreach (var stock in userStocks) {
-                            <a class="stock" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
-                                <h3 id="stock-symbol">@stock.Symbol</h3>
-                                <h4 id="quantity">@stock.Quantity owned</h4>
-                                @* <h4 id="value">@((stock.Quantity > 1) ? $"${Math.Round((stock.Price * stock.Quantity), 2).ToString("F2")} (${Math.Round(stock.Price, 2).ToString("F2")} each)" : $"${Math.Round((stock.Price * stock.Quantity), 2).ToString("F2")}")</h4> *@
-                                <h4 id="value">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
+                            <a class=" bg-white w-64 p-4 rounded-md shadow-md flex flex-col justify-between" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
+                                <h3 id="stock-symbol" class="text-lg font-semibold">@stock.Symbol</h3>
+                                <h4 id="quantity" class="text-sm text-gray-600">@($"Quantity owned: {stock.Quantity}")</h4>
+                                <h4 id="value" class="text-sm text-gray-600">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
                             </a>
                         }
                     } else {
-                        <h3>You do not have any stocks.</h3>
+                        <h3 class="text-lg">You do not have any stocks.</h3>
                     }
                 </div>
                 <div>
@@ -48,7 +47,7 @@
     </Authorized>
 </AuthorizeView>
 
-<style>
+@* <style>
     :root {
         --main-background-colour: rgb(44, 43, 43);
         --accent-colour-1: rgb(29, 28, 28);
@@ -60,4 +59,4 @@
     #wrapper {
         background-color: var(--main-background-colour);
     }
-</style>
+</style> *@
