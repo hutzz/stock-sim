@@ -24,18 +24,20 @@
                 @if (_toggleTradingMenu) {
                     <TradingMenu OnBuy="@HandleTradingMenuBuy" OnSell="@HandleTradingMenuSell" />
                 }
-                <div id="stock-menu-wrapper" class="grid @_gridColumnClass grid-flow-col gap-4">
-                    @if (userStocks.Count > 0) {
-                        @foreach (var stock in userStocks) {
-                            <a class=" bg-white w-64 p-4 rounded-md shadow-md flex flex-col justify-between" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
-                                <h3 id="stock-symbol" class="text-lg font-semibold">@stock.Symbol</h3>
-                                <h4 id="quantity" class="text-sm text-gray-600">@($"Quantity owned: {stock.Quantity}")</h4>
-                                <h4 id="value" class="text-sm text-gray-600">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
-                            </a>
+                <div class="flex justify-center w-screen h-screen">
+                    <div id="stock-menu-wrapper" class="flex flex-wrap justify-center gap-4 m-4 h-28">
+                        @if (userStocks.Count > 0) {
+                            @foreach (var stock in userStocks) {
+                                <a class=" bg-white w-64 p-4 rounded-md shadow-md flex flex-col justify-between" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
+                                    <h3 id="stock-symbol" class="text-lg font-semibold">@stock.Symbol</h3>
+                                    <h4 id="quantity" class="text-sm text-gray-600">@($"Quantity owned: {stock.Quantity}")</h4>
+                                    <h4 id="value" class="text-sm text-gray-600">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
+                                </a>
+                            }
+                        } else {
+                            <h3 class="text-lg">You do not have any stocks.</h3>
                         }
-                    } else {
-                        <h3 class="text-lg">You do not have any stocks.</h3>
-                    }
+                    </div>
                 </div>
                 <div>
                     @if (!string.IsNullOrEmpty(_message)) {

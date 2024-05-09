@@ -1,3 +1,4 @@
+using Microsoft.JSInterop;
 using StockSim.Frontend.Models;
 
 namespace StockSim.Frontend.Pages {
@@ -6,14 +7,11 @@ namespace StockSim.Frontend.Pages {
         private List<UserStockModel> userStocks = new();
         private string _message = "";
         private bool _toggleTradingMenu = false;
-        private string? _gridColumnClass;
         protected override async Task OnInitializedAsync() {
-        base.OnInitialized();
-        StateHasChanged();
-        await LoadUserData();
-        int numColumns = Math.Min(userStocks.Count, 5);
-        _gridColumnClass = $"grid-cols-1 sm:grid-cols-{Math.Min(numColumns, 2)} md:grid-cols-{Math.Min(numColumns, 3)} lg:grid-cols-{Math.Min(numColumns, 4)} xl:grid-cols-{Math.Min(numColumns, 5)}";
-    }
+            base.OnInitialized();
+            StateHasChanged();
+            await LoadUserData();
+        }
         private async Task LoadUserData() {
             try {
                 var token = await TokenService.GetAccessTokenAsync();
