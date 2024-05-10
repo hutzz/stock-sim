@@ -18,5 +18,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 await builder.Build().RunAsync();
