@@ -12,7 +12,7 @@ namespace StockSim.Frontend.Services
         protected ServiceBase(HttpClient httpClient) {
             _httpClient = httpClient;
         }
-        private HttpClient GetHttpClient() {
+        protected HttpClient GetHttpClient() {
             return _httpClient;
         }
         public string CreateUrl(string route) {
