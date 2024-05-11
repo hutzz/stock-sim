@@ -20,7 +20,7 @@ namespace StockSim.Frontend.Services {
         }
         public async Task<string> GetNameByTicker(string path, string ticker) {
             var stocks = await BuildCompanyList(path);
-            return stocks.Where(s => s.Ticker.ToLower() == ticker.ToLower()).First().Name;
+            return stocks.Where(s => s.Ticker.ToLower() == ticker.ToLower()).First().Name ?? "";
         }
     }
 }
