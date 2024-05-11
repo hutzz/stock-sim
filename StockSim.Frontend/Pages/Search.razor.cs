@@ -25,5 +25,8 @@ namespace StockSim.Frontend.Pages {
             }
             StateHasChanged();
         }
+        private void SearchStock() {
+            NavigationManager.NavigateTo($"https://localhost:7003/stock/{searchTerm.ToUpper()}");
+        }
     }
 }
