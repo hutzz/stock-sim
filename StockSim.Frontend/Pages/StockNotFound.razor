@@ -1,0 +1,17 @@
+@page "/stock/notfound"
+@using StockSim.Frontend.Models
+@using StockSim.Frontend.Services
+@using StockSim.Frontend.Components
+@using Microsoft.AspNetCore.Components
+@inject IStockService StockService
+@inject ITokenService TokenService
+@inject IUserService UserService
+@inject ISearchService SearchService
+@inject NavigationManager NavigationManager
+
+<div>
+    <div class="flex flex-col items-center bg-gray-800 h-screen overflow-x-hidden">
+        <Navbar />
+        <h1 class="text-white text-center mt-4">Couldn't find a stock with this symbol. Please try another.</h1>
+    </div>
+</div>

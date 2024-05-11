@@ -17,7 +17,7 @@ namespace StockSim.Frontend.Pages {
             }
             catch (Exception e) {
                 Console.WriteLine(e);
-                NavigationManager.NavigateTo("https://localhost:7003/dashboard");
+                NavigationManager.NavigateTo("https://localhost:7003/stock/notfound");
             }
         }
         private async Task<int> UserStockCount(string symbol) {
