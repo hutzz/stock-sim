@@ -9,12 +9,14 @@
 @inject ITokenService TokenService
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
+@inject ISearchService SearchService
 
 <AuthorizeView>
     <Authorized>
         @if (Model != null) {
             <div id="wrapper">
                 <h1 id="symbol">@Symbol</h1>
+                <h2 class="text-white">@_name</h2>
                 <h2 id="stock-count">@_userStockCount owned</h2>
                 <div id="graph-pane-wrapper">
                     <GraphIntervals SelectInterval="@OnIntervalChange" />

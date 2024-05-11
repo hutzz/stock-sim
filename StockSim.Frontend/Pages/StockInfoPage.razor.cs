@@ -5,12 +5,14 @@ namespace StockSim.Frontend.Pages {
     public partial class StockInfoPage {
         private int _userStockCount;
         private string _message = "";
+        private string _name = "";
         [Parameter]
         public string? Symbol { get; set; }
         public StockModel? Model { get; set; }
         protected override async Task OnInitializedAsync() {
             try {
                 _userStockCount = await UserStockCount(Symbol);
+                _name = await SearchService.GetNameByTicker("data.txt", Symbol);
                 StockDto stockDto = new() { Symbol=Symbol, Period="1d", Interval="1h" };
                 Model = await StockService.GetStockData(stockDto);
                 StateHasChanged();
