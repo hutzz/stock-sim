@@ -15,14 +15,7 @@ namespace StockSim.Frontend.Pages {
         }
         protected override async Task OnInitializedAsync() {
             base.OnInitialized();
-            var response = await SearchService.GetCompanyList("data.txt");
-            using (var reader = new StreamReader(response)) {
-                string? line;
-                while ((line = await reader.ReadLineAsync()) != null) {
-                    var items = line.Split(',');
-                    stocks.Add(new CompanyModel { Ticker = items[0], Name = items[1] });
-                }
-            }
+            stocks = await SearchService.BuildCompanyList("data.txt");
             StateHasChanged();
         }
         private void SearchStock() {
