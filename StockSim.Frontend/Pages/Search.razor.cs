@@ -20,7 +20,7 @@ namespace StockSim.Frontend.Pages {
                 string? line;
                 while ((line = await reader.ReadLineAsync()) != null) {
                     var items = line.Split(',');
-                    stocks.Add(new CompanyModel { Name = items[0], Ticker = items[1] });
+                    stocks.Add(new CompanyModel { Ticker = items[0], Name = items[1] });
                 }
             }
             StateHasChanged();
