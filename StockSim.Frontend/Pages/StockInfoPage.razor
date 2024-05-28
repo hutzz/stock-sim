@@ -14,11 +14,11 @@
 <AuthorizeView>
     <Authorized>
         @if (Model != null) {
-            <div id="wrapper">
-                <h1 id="symbol">@Symbol</h1>
-                <h2 class="text-white">@_name</h2>
-                <h2 id="stock-count">@_userStockCount owned</h2>
-                <div id="graph-pane-wrapper">
+            <div class="flex flex-col h-screen w-screen items-center overflow-hidden bg-gray-800">
+                <h1 class="text-white font-bold text-xl">@Symbol</h1>
+                <h2 class="text-white text-base">@_name</h2>
+                <h2 class="text-white text-sm mt-20">@_userStockCount owned</h2>
+                <div>
                     <GraphIntervals SelectInterval="@OnIntervalChange" />
                     <div id="line-graph-wrapper">
                         <LineGraph Labels="Model.DateTimes" Data="Model.Close" />
