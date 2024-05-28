@@ -21,7 +21,7 @@
                     <div id="stock-menu-wrapper" class="flex flex-wrap justify-center gap-4 m-4 h-28">
                         @if (userStocks.Count > 0) {
                             @foreach (var stock in userStocks) {
-                                <a class="bg-blue-500 w-64 p-4 rounded-md shadow-md flex flex-col justify-between items-center" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
+                                <a class="bg-blue-500 w-64 p-4 rounded-md shadow-md flex flex-col justify-between items-center hover:scale-105" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
                                     <h3 id="stock-symbol" class="text-white text-3xl font-semibold mb-1">@stock.Symbol</h3>
                                     <h4 id="quantity" class="text-white text-sm">@($"{stock.Quantity} owned")</h4>
                                     <h4 id="value" class="text-sm text-white">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
