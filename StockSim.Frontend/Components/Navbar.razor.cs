@@ -3,11 +3,14 @@ using StockSim.Frontend.Services;
 
 namespace StockSim.Frontend.Components {
     public partial class Navbar {
+        [Inject] private CustomAuthenticationStateProvider AuthProvider { get; set; } = default!;
+
         private async Task HandleLogout() {
             // Drop the stored tokens first so the session cannot be refreshed back to life.
             await TokenService.DeleteTokensAsync();
-            // A full reload restarts the app, which rebuilds the auth state from (now empty) storage.
-            NavigationManager.NavigateTo("/login", true);
+            // Clear the in-memory session and route client-side, avoiding a full reload flash.
+            AuthProvider.NotifySignedOut();
+            NavigationManager.NavigateTo("/login");
         }
     }
 }

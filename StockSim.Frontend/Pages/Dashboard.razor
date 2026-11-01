@@ -14,7 +14,18 @@
 
 <AuthorizeView>
     <Authorized>
-        @if (!string.IsNullOrEmpty(user.Username)) {
+        @if (string.IsNullOrEmpty(user.Username)) {
+            <div id="wrapper">
+                <Navbar />
+                <main id="content">
+                    <div class="page-loading">
+                        <span class="loading-spinner" role="progressbar" aria-label="Loading your portfolio"></span>
+                        <p class="loading-text">Loading your portfolio&hellip;</p>
+                    </div>
+                </main>
+            </div>
+        }
+        else {
             <div id="wrapper">
                 <Navbar />
                 <main id="content">
@@ -50,7 +61,7 @@
                                     var change = stock.Change;
                                     var trendClass = change is null ? "trend-flat" : (change >= 0 ? "trend-up" : "trend-down");
                                     var trendIcon = change is null ? "fa-minus" : (change >= 0 ? "fa-arrow-trend-up" : "fa-arrow-trend-down");
-                                    <a class="stock-card" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
+                                    <a class="stock-card" href="/stock/@stock.Symbol" @onclick="() => GoToStock(stock.Symbol)" @onclick:preventDefault="true">
                                         <div class="stock-top">
                                             <h3 class="stock-symbol">@stock.Symbol</h3>
                                             <span class="stock-quantity">@($"{stock.Quantity} owned")</span>

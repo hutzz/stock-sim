@@ -19,7 +19,7 @@ namespace StockSim.Frontend.Pages {
             }
             catch (Exception e) {
                 Console.WriteLine(e);
-                NavigationManager.NavigateTo("https://localhost:7003/stock/notfound");
+                NavigationManager.NavigateTo("/stock/notfound");
             }
         }
         private async Task<int> UserStockCount(string symbol) {
@@ -53,7 +53,7 @@ namespace StockSim.Frontend.Pages {
             }
             catch (Exception e) {
                 Console.WriteLine(e);
-                NavigationManager.NavigateTo("https://localhost:7003/dashboard");
+                NavigationManager.NavigateTo("/dashboard");
             }
         }
         private async Task HandleBuy(BuySellDto stock) {

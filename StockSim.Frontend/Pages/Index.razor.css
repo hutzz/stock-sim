@@ -1,0 +1,145 @@
+﻿#wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2rem;
+	min-height: 100vh;
+	box-sizing: border-box;
+	padding: 2.5rem 1rem;
+	background-color: var(--main-background-colour);
+	overflow-x: hidden;
+}
+
+#hero {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.4rem;
+	text-align: center;
+}
+
+.brand-mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.75rem;
+	height: 3.75rem;
+	font-size: 1.5rem;
+	background-image: linear-gradient(160deg, rgb(52, 71, 102) 0%, rgb(38, 51, 76) 100%);
+	border: 1px solid rgba(75, 115, 227, 0.35);
+	border-radius: 14px;
+	color: rgb(214, 226, 252);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+}
+
+.title {
+	margin: 0;
+	font-size: 2rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--main-font-colour);
+}
+
+.subtitle {
+	margin: 0;
+	max-width: 34rem;
+	font-size: 0.95rem;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.55);
+}
+
+/* Card uses the login/register panel treatment so the landing page reads as part of the app. */
+#actions {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.85rem;
+	width: min(430px, 100%);
+	padding: 2.1rem 2rem 2.2rem;
+	box-sizing: border-box;
+	background-image: linear-gradient(180deg, rgb(36, 34, 34) 0%, var(--accent-colour-1) 100%);
+	border: 1px solid rgba(255, 255, 255, 0.07);
+	border-radius: 14px;
+	box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+}
+
+.action-note {
+	margin: 0 0 0.35rem;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+/* Mirrors the #submit button on login and register; primary action first. */
+.action-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	width: 100%;
+	height: 2.75rem;
+	padding: 0;
+	font-family: inherit;
+	font-size: 0.9rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	text-decoration: none;
+	border: none;
+	border-radius: 10px;
+	outline: none;
+	cursor: pointer;
+	transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.action-primary {
+	background-color: var(--accent-colour-2);
+	color: var(--main-font-colour);
+}
+
+.action-secondary {
+	background-image: linear-gradient(160deg, rgb(52, 71, 102) 0%, rgb(38, 51, 76) 100%);
+	border: 1px solid rgba(75, 115, 227, 0.45);
+	color: var(--main-font-colour);
+}
+
+.action-button:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 18px rgba(75, 115, 227, 0.35);
+}
+
+.action-primary:hover {
+	background-color: rgb(97, 138, 246);
+}
+
+.action-secondary:hover {
+	border-color: rgba(75, 115, 227, 0.7);
+}
+
+.action-button:active {
+	transform: translateY(0) scale(0.99);
+	box-shadow: 0 2px 8px rgba(75, 115, 227, 0.3);
+}
+
+.action-button:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(75, 115, 227, 0.55);
+}
+
+.action-icon {
+	font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+	.title {
+		font-size: 1.6rem;
+	}
+
+	#actions {
+		padding: 1.6rem 1.25rem 1.8rem;
+		border-radius: 12px;
+	}
+}

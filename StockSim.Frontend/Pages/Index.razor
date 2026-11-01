@@ -2,9 +2,37 @@
 @using StockSim.Frontend.Components
 @inject NavigationManager NavigationManager
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Stock Sim</PageTitle>
 
-<p class="text-base text-gray-700">Proper page coming soon maybe</p>
+<div id="wrapper">
+    <header id="hero">
+        <span class="brand-mark"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span>
+        <h1 class="title">Stock Sim</h1>
+        <p class="subtitle">Practice trading with a simulated portfolio. Pick a stock, watch it move, and grow your balance &mdash; no real money at risk.</p>
+    </header>
 
-<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @onclick="RedirectToLogin">Login Page</button>
-<button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @onclick="RedirectToDashboard">Dashboard</button>
+    <AuthorizeView>
+        <Authorized>
+            <section id="actions" aria-label="Get started">
+                <span class="action-note">Your session is active</span>
+                <button type="button" class="action-button action-primary" @onclick="RedirectToDashboard">
+                    <i class="fa-solid fa-gauge-high action-icon" aria-hidden="true"></i>
+                    Go to Dashboard
+                </button>
+            </section>
+        </Authorized>
+        <NotAuthorized>
+            <section id="actions" aria-label="Get started">
+                <span class="action-note">Get started</span>
+                <button type="button" class="action-button action-primary" @onclick="RedirectToLogin">
+                    <i class="fa-solid fa-right-to-bracket action-icon" aria-hidden="true"></i>
+                    Log In
+                </button>
+                <button type="button" class="action-button action-secondary" @onclick="RedirectToRegister">
+                    <i class="fa-solid fa-user-plus action-icon" aria-hidden="true"></i>
+                    Register
+                </button>
+            </section>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>

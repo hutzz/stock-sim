@@ -45,7 +45,10 @@ namespace StockSim.Frontend.Pages {
             try {
                 var result = await LoginService.Login(user);
                 await TokenService.StoreTokensAsync(result);
-                NavigationManager.NavigateTo("/dashboard", true);
+                // Publish the new session in memory, then route client-side; a full reload would
+                // tear the app down to a blank page before the dashboard appears.
+                AuthProvider.NotifySignedIn(result.Access!);
+                NavigationManager.NavigateTo("/dashboard");
             }
             catch (Exception e) {
                 message = e.Message;

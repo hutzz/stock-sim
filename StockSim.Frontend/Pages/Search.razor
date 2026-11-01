@@ -34,7 +34,7 @@
                             <ul id="search-results" aria-label="Search results">
                                 @foreach (var stock in filteredStocks) {
                                     <li>
-                                        <a class="result-link" href="https://localhost:7003/stock/@stock.Ticker">
+                                        <a class="result-link" href="/stock/@stock.Ticker" @onclick="() => GoToStock(stock.Ticker)" @onclick:preventDefault="true">
                                             <span class="result-name">@stock.Name</span>
                                             <span class="result-ticker">@stock.Ticker</span>
                                         </a>

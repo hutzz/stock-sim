@@ -19,7 +19,11 @@ namespace StockSim.Frontend.Pages {
             StateHasChanged();
         }
         private void SearchStock() {
-            NavigationManager.NavigateTo($"https://localhost:7003/stock/{searchTerm.ToUpper()}");
+            // Relative URL keeps navigation in-app; an absolute URL forces a full page reload.
+            NavigationManager.NavigateTo($"/stock/{searchTerm.ToUpper()}");
+        }
+        private void GoToStock(string ticker) {
+            NavigationManager.NavigateTo($"/stock/{ticker.ToUpper()}");
         }
     }
 }

@@ -5,6 +5,9 @@ namespace StockSim.Frontend.Pages {
         private void RedirectToLogin() {
             NavigationManager.NavigateTo("/login");
         }
+        private void RedirectToRegister() {
+            NavigationManager.NavigateTo("/register");
+        }
         private void RedirectToDashboard() {
             NavigationManager.NavigateTo("/dashboard");
         }

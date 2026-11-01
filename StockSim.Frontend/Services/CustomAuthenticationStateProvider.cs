@@ -28,7 +28,16 @@ namespace StockSim.Frontend.Services {
                 return state;
             }
         }
-        private static IEnumerable<Claim> ParseClaimsFromJwt(string jwt) {
+        public void NotifySignedIn(string accessToken) {
+            PublishState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(accessToken), "jwt")));
+        }
+        public void NotifySignedOut() {
+            PublishState(new ClaimsPrincipal(new ClaimsIdentity()));
+        }
+        private void PublishState(ClaimsPrincipal user) {
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+        }
+        internal static IEnumerable<Claim> ParseClaimsFromJwt(string jwt) {
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);

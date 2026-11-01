@@ -18,7 +18,14 @@
 	</head>
 
 	<body>
-		<div id="app">Loading...</div>
+		<div id="app">
+			<!-- Shown while the WebAssembly bundle downloads and boots; replaced on first render. -->
+			<div class="app-splash">
+				<span class="splash-mark"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span>
+				<span class="splash-name">Stock Sim</span>
+				<span class="loading-spinner" role="progressbar" aria-label="Loading Stock Sim"></span>
+			</div>
+		</div>
 
 		<div id="blazor-error-ui">
 			An unhandled error has occurred.

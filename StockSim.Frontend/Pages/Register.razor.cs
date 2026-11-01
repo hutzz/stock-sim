@@ -44,7 +44,8 @@ namespace StockSim.Frontend.Pages {
         }
 
         private void RedirectToLogin() {
-            NavigationManager.NavigateTo("/login", true);
+            // Client-side route change; a full reload would flash a blank page before login appears.
+            NavigationManager.NavigateTo("/login");
         }
     }
 }

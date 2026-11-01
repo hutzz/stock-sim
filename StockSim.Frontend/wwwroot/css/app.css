@@ -12,6 +12,9 @@ html,
 body {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	margin: 0;
+	/* Dark app shell so hard loads and route transitions never flash a blank white page. */
+	background-color: var(--main-background-colour);
+	color: var(--main-font-colour);
 }
 
 h1:focus {
@@ -74,4 +77,74 @@ a,
 
 .blazor-error-boundary::after {
 	content: "An error has occurred.";
+}
+
+/* Splash rendered inside #app in index.html until the Blazor app takes over. */
+#app {
+	min-height: 100vh;
+}
+
+.app-splash {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	min-height: 100vh;
+	background-color: var(--main-background-colour);
+}
+
+.splash-mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.25rem;
+	height: 3.25rem;
+	font-size: 1.35rem;
+	background-image: linear-gradient(160deg, rgb(52, 71, 102) 0%, rgb(38, 51, 76) 100%);
+	border: 1px solid rgba(75, 115, 227, 0.35);
+	border-radius: 14px;
+	color: rgb(214, 226, 252);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+}
+
+.splash-name {
+	font-size: 1.15rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--main-font-colour);
+}
+
+/* Shared spinner used by the splash and per-page loading placeholders. */
+.loading-spinner {
+	width: 2.4rem;
+	height: 2.4rem;
+	border-radius: 50%;
+	border: 3px solid rgba(75, 115, 227, 0.25);
+	border-top-color: var(--accent-colour-2);
+	animation: app-spin 0.8s linear infinite;
+}
+
+@keyframes app-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Placeholder shown while a page fetches its data, so navigating never leaves a white screen. */
+.page-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	width: 100%;
+	padding: 5rem 1rem;
+	box-sizing: border-box;
+}
+
+.loading-text {
+	margin: 0;
+	font-size: 0.9rem;
+	color: rgba(255, 255, 255, 0.6);
 }

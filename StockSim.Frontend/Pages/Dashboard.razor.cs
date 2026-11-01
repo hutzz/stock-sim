@@ -40,6 +40,10 @@ namespace StockSim.Frontend.Pages {
         private float CashBalance => (float)Math.Round(user.Balance, 2);
         private float StocksValue => (float)Math.Round(userStocks.Sum(s => s.TotalValue), 2);
         private float TotalValue => (float)Math.Round(CashBalance + StocksValue, 2);
+        private void GoToStock(string symbol) {
+            // In-app route change; the plain anchor's absolute href used to force a full reload.
+            NavigationManager.NavigateTo($"/stock/{symbol}");
+        }
         private async Task ShowMessage(string message) {
             _message = message;
             StateHasChanged();
