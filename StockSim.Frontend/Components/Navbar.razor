@@ -1,6 +1,20 @@
+@using StockSim.Frontend.Services
 @inject NavigationManager NavigationManager
+@inject ITokenService TokenService
 
-<div class="flex items-center justify-center bg-gray-900 w-screen h-12 text-white" id="nav-wrapper">
-    <a class="flex items-center justify-center w-32 h-full text-s font-bold no-underline" href="https://localhost:7003/dashboard">Dashboard</a>
-    <a class="flex items-center justify-center w-32 h-full text-s font-bold no-underline" href="https://localhost:7003/search">Search</a>
-</div>
+<nav id="navbar" aria-label="Main navigation">
+    <div id="nav-inner">
+        <NavLink class="brand" href="/dashboard" Match="NavLinkMatch.All">
+            <span class="brand-mark"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span>
+            <span class="brand-name">Stock Sim</span>
+        </NavLink>
+        <div class="nav-links">
+            <NavLink class="nav-link" href="/dashboard" Match="NavLinkMatch.All">Dashboard</NavLink>
+            <NavLink class="nav-link" href="/search" Match="NavLinkMatch.All">Search</NavLink>
+        </div>
+        <button type="button" id="logout" title="Sign out of Stock Sim" @onclick="HandleLogout">
+            <i class="fa-solid fa-right-from-bracket logout-icon" aria-hidden="true"></i>
+            <span class="logout-text">Log Out</span>
+        </button>
+    </div>
+</nav>

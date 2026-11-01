@@ -1,32 +1,157 @@
-/* :root {
-	--main-background-colour: rgb(44, 43, 43);
-	--accent-colour-1: rgb(29, 28, 28);
-	--accent-colour-2: rgb(75, 115, 227);
-	--accent-colour-3: rgb(44, 62, 89);
-	--main-font-colour: white;
+﻿/* Sticky app bar built from the same gradient/border/shadow language as the login,
+   register and dashboard cards. Content width matches #content in Dashboard.razor.css. */
+#navbar {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	width: 100%;
+	box-sizing: border-box;
+	background-image: linear-gradient(180deg, rgb(36, 34, 34) 0%, var(--accent-colour-1) 100%);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
 }
 
-#nav-wrapper {
+#nav-inner {
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	background-color: var(--accent-colour-1);
-	width: 100vw;
-	height: 5vh;
+	gap: 1rem;
+	width: min(1080px, 100%);
+	margin: 0 auto;
+	padding: 0.6rem 1rem;
+	box-sizing: border-box;
 }
 
-.nav-item {
-	display: flex;
-	width: 5%;
-	height: 100%;
-	color: var(--main-font-colour);
-	font-size: 0.75vw;
-	font-weight: bold;
+/* Brand (NavLink renders its own <a>, so it is reached through ::deep) */
+::deep .brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
 	text-decoration: none;
-	align-items: center;
-	justify-content: center;
+	color: var(--main-font-colour);
 }
 
-.nav-item:hover {
+.brand-mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	font-size: 0.9rem;
+	background-image: linear-gradient(160deg, rgb(52, 71, 102) 0%, rgb(38, 51, 76) 100%);
+	border: 1px solid rgba(75, 115, 227, 0.35);
+	border-radius: 10px;
+	color: rgb(214, 226, 252);
+}
+
+.brand-name {
+	font-size: 1rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+}
+
+/* Links */
+.nav-links {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	gap: 0.35rem;
+}
+
+/* NavLink renders its own <a>, so scoped CSS reaches it through ::deep. */
+.nav-links ::deep .nav-link {
+	padding: 0.45rem 0.95rem;
+	font-family: inherit;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: rgba(255, 255, 255, 0.6);
+	border: 1px solid transparent;
+	border-radius: 10px;
+	transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.nav-links ::deep .nav-link:hover {
+	color: var(--main-font-colour);
+	background-color: rgba(75, 115, 227, 0.16);
+	border-color: rgba(75, 115, 227, 0.35);
+}
+
+.nav-links ::deep .nav-link.active {
+	color: var(--main-font-colour);
+	background-image: linear-gradient(160deg, rgb(52, 71, 102) 0%, rgb(38, 51, 76) 100%);
+	border-color: rgba(75, 115, 227, 0.45);
+	box-shadow: 0 6px 16px rgba(75, 115, 227, 0.22);
+}
+
+.nav-links ::deep .nav-link:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(75, 115, 227, 0.55);
+}
+
+/* Log out button mirrors the #submit treatment on login and register. */
+#logout {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	padding: 0.55rem 0.95rem;
+	font-family: inherit;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
 	background-color: var(--accent-colour-2);
-} */
+	color: var(--main-font-colour);
+	border: none;
+	border-radius: 10px;
+	outline: none;
+	cursor: pointer;
+	transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+#logout:hover {
+	background-color: rgb(97, 138, 246);
+	transform: translateY(-1px);
+	box-shadow: 0 6px 18px rgba(75, 115, 227, 0.35);
+}
+
+#logout:active {
+	transform: translateY(0) scale(0.99);
+	box-shadow: 0 2px 8px rgba(75, 115, 227, 0.3);
+}
+
+#logout:focus-visible {
+	box-shadow: 0 0 0 3px rgba(75, 115, 227, 0.55);
+}
+
+.logout-icon {
+	font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+	#nav-inner {
+		gap: 0.6rem;
+		padding: 0.5rem 0.75rem;
+	}
+
+	.brand-name {
+		display: none;
+	}
+
+	.nav-links ::deep .nav-link {
+		padding: 0.4rem 0.6rem;
+		font-size: 0.72rem;
+	}
+
+	/* Keep the label off small screens; the icon and tooltip carry the meaning. */
+	.logout-text {
+		display: none;
+	}
+
+	#logout {
+		padding: 0.55rem 0.7rem;
+	}
+}
