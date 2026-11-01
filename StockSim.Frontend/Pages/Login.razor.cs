@@ -1,12 +1,26 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using StockSim.Frontend.Models;
 
 namespace StockSim.Frontend.Pages {
     public partial class Login {
+        [CascadingParameter] private Task<AuthenticationState>? AuthState { get; set; }
+
         private LoginModel user = new();
         private string message = "";
         private bool showValidation;
         private EditForm? form;
+
+        protected override async Task OnInitializedAsync() {
+            base.OnInitialized();
+            // An established session has no reason to sign in again, so skip past this page.
+            if (AuthState == null) return;
+            var state = await AuthState;
+            if (state.User.Identity?.IsAuthenticated == true) {
+                RedirectToDashboard();
+            }
+        }
 
         protected override void OnAfterRender(bool firstRender) {
             if (firstRender && form?.EditContext != null) {
