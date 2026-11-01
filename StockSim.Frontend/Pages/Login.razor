@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@implements IDisposable
 @using StockSim.Frontend.Models
 @using StockSim.Frontend.Services
 @using Microsoft.AspNetCore.Authorization
@@ -12,68 +13,122 @@
 
 <div id="wrapper">
     <div id="text-wrapper">
-        <EditForm Model="@user" OnValidSubmit="Valid" OnInvalidSubmit="Invalid" >
+        <h1 class="title">Log In</h1>
+        <p class="subtitle">Sign in to your Stock Sim account.</p>
+        <EditForm @ref="form" Model="@user" OnValidSubmit="Valid" OnInvalidSubmit="Invalid" novalidate="novalidate">
+            <DataAnnotationsValidator />
+            @if (showValidation || !string.IsNullOrEmpty(message)) {
+                <div class="validation-panel">
+                    <i class="fa-solid fa-circle-exclamation validation-icon"></i>
+                    <div class="validation-body">
+                        <ValidationSummary />
+                        @if (!string.IsNullOrEmpty(message)) {
+                            <div class="server-message">@message</div>
+                        }
+                    </div>
+                </div>
+            }
             <div class="form">
-                <DataAnnotationsValidator />
-                <div class="input-text">
-                    <InputText class="input" id="username" @bind-Value="user.Username" placeholder="Username" required />
-                </div>
-                <ValidationMessage class="validation-message" For="() => user.Username" />
-                <div class="input-text">
-                    <InputText class="input" id="password" type="password" @bind-Value="user.Password" placeholder="Password" required />
-                </div>
-                <ValidationMessage class="validation-message" For="() => user.Password" />
-                <input id="submit" type="submit" />
-                <div>
-                    @if (!string.IsNullOrEmpty(message)) {
-                        <div class="validation-message">@message</div>
-                    }
-                </div>
+                <InputText class="input" id="username" @bind-Value="user.Username" placeholder="Username" aria-label="Username" required />
+                <InputText class="input" id="password" type="password" @bind-Value="user.Password" placeholder="Password" aria-label="Password" required />
+                <button id="submit" type="submit">Sign In</button>
             </div>
         </EditForm>
-        <div>
-            <p id="redirect">Don't have an account? <a href="https://localhost:7003/register">Register</a></p>
-        </div>
     </div>
+    <p id="redirect">Don't have an account? <a href="/register">Register</a></p>
 </div>
 
 <style>
-    :root {
-        --main-background-colour: rgb(44, 43, 43);
-        --accent-colour-1: rgb(29, 28, 28);
-        --accent-colour-2: rgb(75, 115, 227);
-        --accent-colour-3: rgb(44, 62, 89);
-        --main-font-colour: white;
-    }
-
-    ::placeholder {
-        color: var(--main-font-colour);
-        font-size: 0.75vw;
-    }
-
-    .validation-message {
-        margin-top: 1%;
-    }
-
-    #wrapper {
-        background-color: var(--main-background-colour);
-    }
-
+    /* Scoped CSS cannot reach elements rendered by child components (InputText, ValidationSummary),
+       so the field and validation styles stay global to this page. */
     .input {
         box-sizing: border-box;
-        border-radius: 16px 16px;
-        border: none;
-        outline: none;
         width: 100%;
-        height: 100%;
+        height: 2.75rem;
+        padding: 0 0.9rem;
+        font-family: inherit;
+        font-size: 0.95rem;
         background-color: var(--accent-colour-3);
-        padding-left: 0.5vw;
-        font-size: 0.75vw;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 10px;
         color: var(--main-font-colour);
         caret-color: var(--main-font-colour);
+        outline: none;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
     }
-    
+
+    /* app.css adds global .valid/.invalid outlines; replace them with an accent ring. */
+    .input.valid.modified:not([type="checkbox"]),
+    .input.invalid {
+        outline: none;
+    }
+
+    .input.invalid {
+        background-color: rgba(179, 33, 33, 0.28);
+        border-color: rgba(220, 80, 80, 0.65);
+    }
+
+    .input::placeholder {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.48);
+    }
+
+    .input:focus {
+        background-color: rgb(48, 68, 99);
+        border-color: var(--accent-colour-2);
+        box-shadow: 0 0 0 3px rgba(75, 115, 227, 0.28);
+    }
+
     .input:focus::placeholder {
         color: transparent;
+    }
+
+    .validation-panel {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        margin-bottom: 1.15rem;
+        padding: 0.7rem 0.85rem;
+        text-align: left;
+        font-size: 0.83rem;
+        line-height: 1.45;
+        background-color: rgba(179, 33, 33, 0.16);
+        border: 1px solid rgba(220, 80, 80, 0.4);
+        border-left: 3px solid rgb(209, 75, 75);
+        border-radius: 10px;
+        color: rgb(255, 178, 178);
+    }
+
+    .validation-icon {
+        margin-top: 0.15rem;
+        font-size: 0.85rem;
+        color: rgb(224, 106, 106);
+    }
+
+    .validation-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        min-width: 0;
+    }
+
+    /* ValidationSummary renders a "validation-errors" list of "validation-message" items,
+       so these selectors out-specify the global .validation-message rule in app.css. */
+    .validation-panel .validation-errors {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .validation-panel .validation-message,
+    .validation-panel .server-message {
+        color: inherit;
+    }
+
+    .validation-panel .validation-message::before {
+        content: "\2022";
+        margin-right: 0.4rem;
+        font-weight: 700;
+        color: rgb(224, 106, 106);
     }
 </style>
