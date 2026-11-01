@@ -1,5 +1,8 @@
 let lineChart;
 
+const axisColor = "#38383b";
+const tickColor = "rgba(255, 255, 255, 0.45)";
+
 window.drawLineGraph = (labels, data) => {
 	const ctx = document.getElementById("lineChart");
 	const chartData = {
@@ -9,11 +12,12 @@ window.drawLineGraph = (labels, data) => {
 				label: "Value",
 				data: data,
 				fill: false,
-				borderColor: "#32456b",
-				backgroundColor: "#32456b",
+				borderColor: "#4b73e3",
+				backgroundColor: "rgba(75, 115, 227, 0.12)",
 				pointBackgroundColor: "#b5c5eb",
 				pointBorderColor: "#b5c5eb",
-				pointRadius: 5,
+				pointRadius: 4,
+				pointHoverRadius: 6,
 				tension: 0.2,
 			},
 		],
@@ -22,15 +26,47 @@ window.drawLineGraph = (labels, data) => {
 		type: "line",
 		data: chartData,
 		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: false,
+				},
+				tooltip: {
+					backgroundColor: "rgb(36, 34, 34)",
+					borderColor: "rgba(75, 115, 227, 0.45)",
+					borderWidth: 1,
+					titleColor: "white",
+					bodyColor: "rgba(255, 255, 255, 0.8)",
+					padding: 10,
+					cornerRadius: 8,
+					displayColors: false,
+					callbacks: {
+						label: (item) => `$${Number(item.parsed.y).toFixed(2)}`,
+					},
+				},
+			},
 			scales: {
 				x: {
 					grid: {
-						color: "#38383b",
+						color: axisColor,
+					},
+					ticks: {
+						color: tickColor,
+						font: { size: 11 },
+						maxRotation: 0,
+						autoSkip: true,
+						maxTicksLimit: 8,
 					},
 				},
 				y: {
 					grid: {
-						color: "#38383b",
+						color: axisColor,
+					},
+					ticks: {
+						color: tickColor,
+						font: { size: 11 },
+						callback: (value) => `$${Number(value).toFixed(2)}`,
 					},
 				},
 			},

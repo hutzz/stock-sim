@@ -148,3 +148,169 @@ a,
 	font-size: 0.9rem;
 	color: rgba(255, 255, 255, 0.6);
 }
+
+/* Trade forms (Buy/Sell) share one field definition; scoped CSS cannot reach the
+   InputNumber and ValidationMessage rendered inside those components. */
+.trade-block {
+	/* Shared button track so buy and sell rows align: with an `auto` column each button sized
+	   to its own label, making the two buttons (and the inputs beside them) different widths. */
+	--trade-btn-width: 9.5rem;
+	width: 100%;
+}
+
+.trade-form {
+	width: 100%;
+}
+
+.trade-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) var(--trade-btn-width);
+	align-items: center;
+	gap: 0.75rem;
+	width: 100%;
+}
+
+.trade-label {
+	grid-column: 1 / -1;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.trade-input {
+	box-sizing: border-box;
+	min-width: 0;
+	height: 2.75rem;
+	padding: 0 0.9rem;
+	font-family: inherit;
+	font-size: 0.95rem;
+	background-color: var(--accent-colour-3);
+	border: 1px solid rgba(255, 255, 255, 0.09);
+	border-radius: 10px;
+	color: var(--main-font-colour);
+	caret-color: var(--main-font-colour);
+	outline: none;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+/* The global .valid/.invalid outlines above are replaced by the accent ring below. */
+.trade-input.valid.modified:not([type="checkbox"]),
+.trade-input.invalid {
+	outline: none;
+}
+
+.trade-input.invalid {
+	background-color: rgba(179, 33, 33, 0.28);
+	border-color: rgba(220, 80, 80, 0.65);
+}
+
+.trade-input::placeholder {
+	font-size: 0.95rem;
+	color: rgba(255, 255, 255, 0.48);
+}
+
+.trade-input:focus {
+	background-color: rgb(48, 68, 99);
+	border-color: var(--accent-colour-2);
+	box-shadow: 0 0 0 3px rgba(75, 115, 227, 0.28);
+}
+
+.trade-input:focus::placeholder {
+	color: transparent;
+}
+
+.trade-input::-webkit-outer-spin-button,
+.trade-input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.trade-input[type="number"] {
+	appearance: textfield;
+	-moz-appearance: textfield;
+}
+
+/* ValidationMessage renders a "validation-message" div; this out-specifies the global rule above. */
+.trade-validation-message.validation-message {
+	grid-column: 1 / -1;
+	margin-top: 0.15rem;
+	padding: 0.55rem 0.7rem;
+	font-size: 0.8rem;
+	line-height: 1.4;
+	text-align: left;
+	background-color: rgba(179, 33, 33, 0.16);
+	border: 1px solid rgba(220, 80, 80, 0.4);
+	border-left: 3px solid rgb(209, 75, 75);
+	border-radius: 10px;
+	color: rgb(255, 178, 178);
+}
+
+/* Submit buttons mirror the login/register #submit treatment; sell reads warmer. */
+.trade-submit {
+	height: 2.75rem;
+	padding: 0 1.4rem;
+	font-family: inherit;
+	font-size: 0.85rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: var(--main-font-colour);
+	border: none;
+	border-radius: 10px;
+	outline: none;
+	cursor: pointer;
+	transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.trade-submit-buy {
+	background-color: var(--accent-colour-2);
+}
+
+.trade-submit-buy:hover {
+	background-color: rgb(97, 138, 246);
+	transform: translateY(-1px);
+	box-shadow: 0 6px 18px rgba(75, 115, 227, 0.35);
+}
+
+.trade-submit-buy:active {
+	transform: translateY(0) scale(0.99);
+	box-shadow: 0 2px 8px rgba(75, 115, 227, 0.3);
+}
+
+.trade-submit-buy:focus-visible {
+	box-shadow: 0 0 0 3px rgba(75, 115, 227, 0.55);
+}
+
+.trade-submit-sell {
+	background-color: rgb(122, 52, 52);
+	border: 1px solid rgba(220, 80, 80, 0.45);
+}
+
+.trade-submit-sell:hover {
+	background-color: rgb(190, 60, 60);
+	border-color: rgb(220, 80, 80);
+	transform: translateY(-1px);
+	box-shadow: 0 6px 18px rgba(190, 60, 60, 0.35);
+}
+
+.trade-submit-sell:active {
+	transform: translateY(0) scale(0.99);
+	box-shadow: 0 2px 8px rgba(190, 60, 60, 0.3);
+}
+
+.trade-submit-sell:focus-visible {
+	box-shadow: 0 0 0 3px rgba(220, 80, 80, 0.5);
+}
+
+@media (max-width: 640px) {
+	.trade-row {
+		grid-template-columns: 1fr;
+	}
+
+	.trade-submit {
+		width: 100%;
+	}
+}

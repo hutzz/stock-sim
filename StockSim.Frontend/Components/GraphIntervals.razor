@@ -7,10 +7,11 @@
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
 
-<div id="wrapper">
-    <button class="period" @onclick='async() => await SelectInterval.InvokeAsync(new StockDto() {Period="1d", Interval="1h"})'>Today</button>
-    <button class="period" @onclick='async() => await SelectInterval.InvokeAsync(new StockDto() {Period="7d", Interval="1d"})'>7d</button>
-    <button class="period" @onclick='async() => await SelectInterval.InvokeAsync(new StockDto() {Period="1mo", Interval="1d"})'>Month</button>
-    <button class="period" @onclick='async() => await SelectInterval.InvokeAsync(new StockDto() {Period="1y", Interval="1wk"})'>Year</button>
+<div id="intervals" role="group" aria-label="Graph time range">
+    @foreach (var option in Intervals) {
+        <button type="button" class="period @(option.Period == Active ? "period-active" : "")"
+                aria-pressed="@(option.Period == Active)"
+                @onclick="() => Select(option)">@option.Label</button>
+    }
 </div>
 

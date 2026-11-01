@@ -11,43 +11,61 @@
 @inject NavigationManager NavigationManager
 @inject ISearchService SearchService
 
+<PageTitle>@Symbol - Stock Sim</PageTitle>
+
 <AuthorizeView>
     <Authorized>
         @if (Model == null) {
-            <div class="flex flex-col min-h-screen w-screen overflow-x-hidden" style="background-color: var(--main-background-colour);">
+            <div id="wrapper">
                 <Navbar />
-                <div class="page-loading">
-                    <span class="loading-spinner" role="progressbar" aria-label="Loading stock"></span>
-                    <p class="loading-text">Loading @Symbol&hellip;</p>
-                </div>
+                <main id="content">
+                    <div class="page-loading">
+                        <span class="loading-spinner" role="progressbar" aria-label="Loading stock"></span>
+                        <p class="loading-text">Loading @Symbol&hellip;</p>
+                    </div>
+                </main>
             </div>
         }
         else {
-            <div class="flex flex-col h-screen w-screen items-center overflow-hidden bg-gray-800">
+            <div id="wrapper">
                 <Navbar />
-                <h1 class="text-white font-bold text-xl">@Symbol</h1>
-                <h2 class="text-white text-base">@_name</h2>
-                <h2 class="text-white text-sm mt-20">@_userStockCount owned</h2>
-                <div>
-                    <GraphIntervals SelectInterval="@OnIntervalChange" />
-                    <div id="line-graph-wrapper">
-                        <LineGraph Labels="Model.DateTimes" Data="Model.Close" />
-                    </div>
-                    <div id="buy-sell-wrapper">
-                        <Buy Symbol="@Symbol" OnBuy="@HandleBuy" OnFail="@HandleFail" />
-                        <Sell Symbol="@Symbol" OnSell="@HandleSell" OnFail="@HandleFail" />
-                    </div>
-                </div>
-                @if (!string.IsNullOrEmpty(_message)) {
-                    <div class="validation-message">@_message</div>
-                }
+                <main id="content">
+                    <header id="intro">
+                        <h1 class="title">@Symbol</h1>
+                        <p class="subtitle">@_name</p>
+                    </header>
+                    <section id="ownership-card" aria-label="Shares you own of this stock">
+                        <span class="stat-label">Shares owned</span>
+                        <span class="stat-value">@_userStockCount</span>
+                        <span class="stat-note">@(_userStockCount > 0 ? $"Worth ${(UserStockValue).ToString("F2")}" : "You do not own any shares yet.")</span>
+                    </section>
+                    <section id="graph-panel" aria-label="Price history">
+                        <div class="panel-header">
+                            <h2 class="panel-title">Price history</h2>
+                            <GraphIntervals Active="@_period" SelectInterval="@OnIntervalChange" />
+                        </div>
+                        <div id="graph-body">
+                            <LineGraph Labels="GraphLabels" Data="Model.Close" />
+                        </div>
+                    </section>
+                    <section id="trade-panel" aria-label="Buy and sell this stock">
+                        <div class="panel-header">
+                            <h2 class="panel-title">Trade @Symbol</h2>
+                            <span class="panel-meta">Cash in account: $@CashBalance.ToString("F2")</span>
+                        </div>
+                        <div id="trade-forms">
+                            <Buy Symbol="@Symbol" OnBuy="@HandleBuy" OnFail="@HandleFail" />
+                            <Sell Symbol="@Symbol" OnSell="@HandleSell" OnFail="@HandleFail" />
+                        </div>
+                    </section>
+                    @if (!string.IsNullOrEmpty(_message)) {
+                        <div class="@(_messageIsSuccess ? "flash-message flash-success" : "flash-message flash-error")" role="status">
+                            <i class="@(_messageIsSuccess ? "fa-solid fa-circle-check flash-icon" : "fa-solid fa-circle-exclamation flash-icon")" aria-hidden="true"></i>
+                            <span class="flash-text">@_message</span>
+                        </div>
+                    }
+                </main>
             </div>
         }
     </Authorized>
 </AuthorizeView>
-
-<style>
-    #wrapper {
-        background-color: var(--main-background-colour);
-    }
-</style>
