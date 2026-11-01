@@ -10,48 +10,77 @@
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
 
+<PageTitle>Dashboard</PageTitle>
+
 <AuthorizeView>
     <Authorized>
         @if (!string.IsNullOrEmpty(user.Username)) {
-            <div class="flex flex-col items-center bg-gray-800 h-screen" id="wrapper">
+            <div id="wrapper">
                 <Navbar />
-                <h1 class="text-2xl text-white text-center" id="welcome">Welcome, @user.Username!</h1>
-                <h2 class="text-xl text-white text-center" id="balance">$@Math.Round(user.Balance, 2).ToString("F2")</h2>
-                <div class="flex justify-center w-screen h-screen">
-                    <div id="stock-menu-wrapper" class="flex flex-wrap justify-center gap-4 m-4 h-28">
-                        @if (userStocks.Count > 0) {
-                            @foreach (var stock in userStocks) {
-                                <a class="bg-blue-500 w-64 p-4 rounded-md shadow-md flex flex-col justify-between items-center hover:scale-105" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
-                                    <h3 id="stock-symbol" class="text-white text-3xl font-semibold mb-1">@stock.Symbol</h3>
-                                    <h4 id="quantity" class="text-white text-sm">@($"{stock.Quantity} owned")</h4>
-                                    <h4 id="value" class="text-sm text-white">$@(Math.Round((stock.Price * stock.Quantity), 2).ToString("F2"))</h4>
-                                </a>
-                            }
-                        } else {
-                            <h3 class="text-lg">You do not have any stocks.</h3>
+                <main id="content">
+                    <header id="intro">
+                        <h1 class="title">Welcome, @user.Username!</h1>
+                        <p class="subtitle">Here's how your portfolio is doing today.</p>
+                    </header>
+                    <section id="summary" aria-label="Account summary">
+                        <div class="stat-card">
+                            <span class="stat-label">Cash in account</span>
+                            <span class="stat-value">$@CashBalance.ToString("F2")</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Value of stocks owned</span>
+                            <span class="stat-value">$@StocksValue.ToString("F2")</span>
+                        </div>
+                        <div class="stat-card stat-card-total">
+                            <span class="stat-label">Total account value</span>
+                            <span class="stat-value">$@TotalValue.ToString("F2")</span>
+                        </div>
+                    </section>
+                    <section id="holdings-panel" aria-label="Stocks you own">
+                        <div id="panel-header">
+                            <h2 class="panel-title">Your holdings</h2>
+                            <span class="panel-meta">@((userStocks.Count == 1) ? "1 position" : $"{userStocks.Count} positions")</span>
+                        </div>
+                        @if (_loading) {
+                            <p class="empty-note">Loading your holdings&hellip;</p>
                         }
-                    </div>
-                </div>
-                <div>
+                        else if (userStocks.Count > 0) {
+                            <div id="stock-menu-wrapper">
+                                @foreach (var stock in userStocks) {
+                                    var change = stock.Change;
+                                    var trendClass = change is null ? "trend-flat" : (change >= 0 ? "trend-up" : "trend-down");
+                                    var trendIcon = change is null ? "fa-minus" : (change >= 0 ? "fa-arrow-trend-up" : "fa-arrow-trend-down");
+                                    <a class="stock-card" href="@($"https://localhost:7003/stock/{stock.Symbol}")">
+                                        <div class="stock-top">
+                                            <h3 class="stock-symbol">@stock.Symbol</h3>
+                                            <span class="stock-quantity">@($"{stock.Quantity} owned")</span>
+                                        </div>
+                                        <div class="stock-price-row">
+                                            <span class="stock-unit-price">$@Math.Round(stock.Price, 2).ToString("F2")</span>
+                                            <span class="stock-per-share">per share</span>
+                                        </div>
+                                        <div class="stock-bottom">
+                                            <span class="stock-value">$@stock.TotalValue.ToString("F2")</span>
+                                            <span class="@trendClass" title="Change in unit price since the previous close">
+                                                <i class="fa-solid @trendIcon" aria-hidden="true"></i>
+                                                @if (change is not null) {
+                                                    <span class="trend-text">@($"{(change >= 0 ? "+" : "")}{change.Value.ToString("F2")} / sh")</span>
+                                                }
+                                            </span>
+                                        </div>
+                                    </a>
+                                }
+                            </div>
+                        }
+                        else {
+                            <p class="empty-note">You do not have any stocks. Use <a href="/search">Search</a> to find something to buy.</p>
+                        }
+                    </section>
                     @if (!string.IsNullOrEmpty(_message)) {
                         <div class="validation-message">@_message</div>
                     }
-                </div>
+                </main>
             </div>
         }
     </Authorized>
 </AuthorizeView>
-
-@* <style>
-    :root {
-        --main-background-colour: rgb(44, 43, 43);
-        --accent-colour-1: rgb(29, 28, 28);
-        --accent-colour-2: rgb(75, 115, 227);
-        --accent-colour-3: rgb(44, 62, 89);
-        --main-font-colour: white;
-    }
-
-    #wrapper {
-        background-color: var(--main-background-colour);
-    }
-</style> *@

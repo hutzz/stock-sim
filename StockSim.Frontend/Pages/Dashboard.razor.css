@@ -1,73 +1,254 @@
-/* :root {
-	--main-background-colour: rgb(44, 43, 43);
-	--accent-colour-1: rgb(29, 28, 28);
-	--accent-colour-2: rgb(75, 115, 227);
-	--accent-colour-3: rgb(44, 62, 89);
-	--main-font-colour: white;
+﻿#wrapper {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	box-sizing: border-box;
+	background-color: var(--main-background-colour);
+	overflow-x: hidden;
 }
 
-#wrapper {
+#content {
 	display: flex;
-	height: 100vh;
 	flex-direction: column;
 	align-items: center;
+	gap: 1.6rem;
+	width: min(1080px, 100%);
+	margin: 0 auto;
+	padding: 2.4rem 1rem 3rem;
+	box-sizing: border-box;
 }
 
-#welcome {
-	font-size: 1vw;
+/* Welcome text sits inside a header block instead of floating at the top of the page. */
+#intro {
+	text-align: center;
+}
+
+.title {
+	margin: 0;
+	font-size: 1.55rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
 	color: var(--main-font-colour);
 }
 
-#balance {
-	font-size: 0.75vw;
+.subtitle {
+	margin: 0.4rem 0 0;
+	font-size: 0.9rem;
+	color: rgba(255, 255, 255, 0.55);
+}
+
+/* Cash / holdings / total split into three cards using the login and register card treatment. */
+#summary {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1rem;
+	width: 100%;
+}
+
+.stat-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.4rem;
+	flex: 1 1 220px;
+	max-width: 320px;
+	padding: 1.15rem 1.25rem;
+	background-image: linear-gradient(180deg, rgb(36, 34, 34) 0%, var(--accent-colour-1) 100%);
+	border: 1px solid rgba(255, 255, 255, 0.07);
+	border-radius: 14px;
+	box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+}
+
+.stat-label {
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.stat-value {
+	font-size: 1.5rem;
+	font-weight: 700;
 	color: var(--main-font-colour);
+}
+
+.stat-card-total {
+	background-image: linear-gradient(180deg, rgb(38, 54, 82) 0%, var(--accent-colour-3) 100%);
+	border-color: rgba(75, 115, 227, 0.35);
+}
+
+#holdings-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+	width: 100%;
+	padding: 1.5rem 1.5rem 1.75rem;
+	box-sizing: border-box;
+	background-color: var(--accent-colour-1);
+	border: 1px solid rgba(255, 255, 255, 0.07);
+	border-radius: 14px;
+	box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+}
+
+#panel-header {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.panel-title {
+	margin: 0;
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--main-font-colour);
+}
+
+.panel-meta {
+	font-size: 0.78rem;
+	color: rgba(255, 255, 255, 0.45);
 }
 
 #stock-menu-wrapper {
 	display: flex;
-	flex-direction: row;
 	flex-wrap: wrap;
-	width: 90%;
-	height: 80%;
-	justify-content: space-evenly;
-	background-color: var(--accent-colour-1);
-	border-radius: 15px 15px;
-	margin-top: 2%;
+	gap: 0.9rem;
 }
 
-.stock {
+.empty-note {
+	margin: 0;
+	font-size: 0.88rem;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.empty-note > a {
+	font-weight: 600;
+	color: var(--accent-colour-2);
+	text-decoration: none;
+}
+
+.empty-note > a:hover {
+	color: rgb(97, 138, 246);
+	text-decoration: underline;
+}
+
+/* Tiles use slate gradients and softened text so the panel is not a block of solid correctorca blue. */
+.stock-card {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 0.75rem;
+	flex: 1 1 230px;
+	max-width: 280px;
+	min-height: 132px;
+	padding: 1rem 1.1rem 1.05rem;
+	text-decoration: none;
+	background-image: linear-gradient(160deg, rgb(52, 71, 102) 0%, rgb(38, 51, 76) 100%);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 12px;
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+	transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.stock-card:hover {
+	transform: translateY(-2px);
+	border-color: rgba(75, 115, 227, 0.5);
+	box-shadow: 0 14px 30px rgba(75, 115, 227, 0.28);
+}
+
+.stock-card:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(75, 115, 227, 0.55);
+}
+
+.stock-top {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.6rem;
+}
+
+.stock-symbol {
+	margin: 0;
+	font-size: 1.15rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: var(--main-font-colour);
+}
+
+.stock-quantity {
+	font-size: 0.74rem;
+	color: rgba(255, 255, 255, 0.52);
+}
+
+.stock-price-row {
+	display: flex;
+	align-items: baseline;
+	gap: 0.4rem;
+}
+
+.stock-unit-price {
+	font-size: 1.05rem;
+	font-weight: 600;
+	color: rgb(214, 226, 252);
+}
+
+.stock-per-share {
+	font-size: 0.7rem;
+	color: rgba(255, 255, 255, 0.42);
+}
+
+.stock-bottom {
 	display: flex;
 	align-items: center;
-	flex-direction: column;
-	width: calc(10% - 10px);
-	height: 10%;
-	background-color: var(--accent-colour-2);
-	border: 8px solid #3720ba; 
-	border-radius: 15px 15px;
-	margin: 1%;
-	text-decoration: none;
-	transition: 0.5s;
+	justify-content: space-between;
+	gap: 0.6rem;
+	padding-top: 0.6rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.09);
 }
 
-.stock:hover {
-	transform: scale(1.2);
-	cursor: pointer;
-}
-
-#stock-symbol {
+.stock-value {
+	font-size: 0.98rem;
+	font-weight: 700;
 	color: var(--main-font-colour);
-	font-size: 0.75vw;
-	margin: 0.5vw 0 0 0;
 }
 
-#quantity {
-	color: var(--main-font-colour);
-	font-size: 0.4vw;
-	margin: 0.25vh 0 0 0;
+.trend-up,
+.trend-down,
+.trend-flat {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: 0.76rem;
+	font-weight: 600;
 }
 
-#value {
-	color: var(--main-font-colour);
-	font-size: 0.6vw;
-	margin: 1vw 0% 0% 0%;
-} */
+.trend-up {
+	color: rgb(94, 211, 143);
+}
+
+.trend-down {
+	color: rgb(240, 118, 118);
+}
+
+.trend-flat {
+	color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 480px) {
+	#content {
+		padding: 1.6rem 0.75rem 2.2rem;
+	}
+
+	#holdings-panel {
+		padding: 1.15rem 1rem 1.3rem;
+	}
+
+	.stock-card {
+		max-width: none;
+	}
+}

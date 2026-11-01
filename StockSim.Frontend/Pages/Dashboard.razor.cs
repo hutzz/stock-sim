@@ -7,6 +7,7 @@ namespace StockSim.Frontend.Pages {
         private List<UserStockModel> userStocks = new();
         private string _message = "";
         private bool _toggleTradingMenu = false;
+        private bool _loading = true;
         protected override async Task OnInitializedAsync() {
             base.OnInitialized();
             StateHasChanged();
@@ -27,6 +28,7 @@ namespace StockSim.Frontend.Pages {
                     Console.WriteLine(e);
                     userStocks = new List<UserStockModel>();
                 }
+                _loading = false;
                 StateHasChanged();
             }
             catch(Exception e) {
@@ -34,6 +36,10 @@ namespace StockSim.Frontend.Pages {
                 NavigationManager.NavigateTo("/login");
             }
         }
+        // Cash, holdings and combined totals shown in the portfolio summary cards.
+        private float CashBalance => (float)Math.Round(user.Balance, 2);
+        private float StocksValue => (float)Math.Round(userStocks.Sum(s => s.TotalValue), 2);
+        private float TotalValue => (float)Math.Round(CashBalance + StocksValue, 2);
         private async Task ShowMessage(string message) {
             _message = message;
             StateHasChanged();
