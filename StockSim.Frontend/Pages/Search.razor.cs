@@ -19,8 +19,12 @@ namespace StockSim.Frontend.Pages {
             StateHasChanged();
         }
         private void SearchStock() {
+            // An empty (or whitespace-only) query has no ticker to open, so the form does nothing.
+            if (string.IsNullOrWhiteSpace(searchTerm)) {
+                return;
+            }
             // Relative URL keeps navigation in-app; an absolute URL forces a full page reload.
-            NavigationManager.NavigateTo($"/stock/{searchTerm.ToUpper()}");
+            NavigationManager.NavigateTo($"/stock/{searchTerm.Trim().ToUpper()}");
         }
         private void GoToStock(string ticker) {
             NavigationManager.NavigateTo($"/stock/{ticker.ToUpper()}");

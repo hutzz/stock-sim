@@ -9,9 +9,25 @@
 @inject ISearchService SearchService
 @inject NavigationManager NavigationManager
 
-<div>
-    <div class="flex flex-col items-center bg-gray-800 h-screen overflow-x-hidden">
-        <Navbar />
-        <h1 class="text-white text-center mt-4">Couldn't find a stock with this symbol. Please try another.</h1>
-    </div>
+<PageTitle>Stock not found</PageTitle>
+
+<div id="wrapper">
+    <Navbar />
+    <main id="content">
+        <header id="intro">
+            <h1 class="title">Stock not found</h1>
+            <p class="subtitle">That ticker doesn't match anything we track.</p>
+        </header>
+        <section id="notfound-panel" aria-label="Stock not found">
+            <p class="notfound-message">Couldn't find a stock with this symbol. Please try another.</p>
+            <a id="back-to-search" href="/search" @onclick="@BackToSearch" @onclick:preventDefault="true">
+                <i class="fa-solid fa-arrow-left back-icon" aria-hidden="true"></i>
+                Back to search
+            </a>
+        </section>
+    </main>
 </div>
+
+@code {
+    private void BackToSearch() => NavigationManager.NavigateTo("/search");
+}
