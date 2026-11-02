@@ -11,6 +11,10 @@ namespace StockSim.Frontend.Models {
         public float? PreviousPrice { get; set; }
         [JsonPropertyName("quantity")]
         public int Quantity { get; set; }
+        [JsonPropertyName("avg_cost")]
+        public float? AvgCost { get; set; }
+        [JsonPropertyName("unrealized_pnl")]
+        public float? UnrealizedPnl { get; set; }
 
         public float TotalValue => (float)Math.Round(Price * Quantity, 2);
 

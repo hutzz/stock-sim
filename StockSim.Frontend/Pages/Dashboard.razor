@@ -47,6 +47,18 @@
                             <span class="stat-value">$@TotalValue.ToString("F2")</span>
                         </div>
                     </section>
+                    @if (HasSummary) {
+                        <section id="pnl" aria-label="Profit and loss">
+                            <div class="pnl-row">
+                                <span class="pnl-label">Realized profit &amp; loss</span>
+                                <span class="@PnlClass(RealizedPnl)">@FormatSigned(RealizedPnl)</span>
+                            </div>
+                            <div class="pnl-row">
+                                <span class="pnl-label">Unrealized profit &amp; loss</span>
+                                <span class="@PnlClass(UnrealizedPnl)">@FormatSigned(UnrealizedPnl)</span>
+                            </div>
+                        </section>
+                    }
                     <section id="holdings-panel" aria-label="Stocks you own">
                         <div id="panel-header">
                             <h2 class="panel-title">Your holdings</h2>
@@ -70,6 +82,15 @@
                                             <span class="stock-unit-price">$@Math.Round(stock.Price, 2).ToString("F2")</span>
                                             <span class="stock-per-share">per share</span>
                                         </div>
+                                        @if (stock.AvgCost is not null) {
+                                            <div class="stock-cost-row">
+                                                <span class="stock-cost">@($"avg ${Math.Round(stock.AvgCost.Value, 2).ToString("F2")} / sh")</span>
+                                                @if (stock.UnrealizedPnl is not null) {
+                                                    var pnl = (float)Math.Round(stock.UnrealizedPnl.Value, 2);
+                                                    <span class="@PnlClass(pnl)">@FormatSigned(pnl)</span>
+                                                }
+                                            </div>
+                                        }
                                         <div class="stock-bottom">
                                             <span class="stock-value">$@stock.TotalValue.ToString("F2")</span>
                                             <span class="@trendClass" title="Change in unit price since the previous close">

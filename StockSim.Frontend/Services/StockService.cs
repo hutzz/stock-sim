@@ -10,6 +10,9 @@ namespace StockSim.Frontend.Services {
         public async Task<List<UserStockModel>> GetUserStockList(string token) {
             return await GetJsonAsync<List<UserStockModel>>(CreateUrl($"/stock/get"), token);
         }
+        public async Task<PortfolioSummaryModel> GetPortfolioSummary(string token) {
+            return await GetJsonAsync<PortfolioSummaryModel>(CreateUrl("/stock/summary"), token);
+        }
         public async Task<Message> BuyStock(string token, BuySellDto stock) {
             return await PostJsonAsync<BuySellDto, Message>(CreateUrl("/stock/buy"), token, stock);
         }

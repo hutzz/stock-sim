@@ -5,6 +5,7 @@ namespace StockSim.Frontend.Pages {
     public partial class Dashboard {
         private UserModel user = new();
         private List<UserStockModel> userStocks = new();
+        private PortfolioSummaryModel? summary;
         private string _message = "";
         private bool _toggleTradingMenu = false;
         private bool _loading = true;
@@ -28,6 +29,15 @@ namespace StockSim.Frontend.Pages {
                     Console.WriteLine(e);
                     userStocks = new List<UserStockModel>();
                 }
+                // The summary is additive detail; if it is unavailable the cards fall
+                // back to the cash and holdings figures above rather than failing the page.
+                try {
+                    summary = await StockService.GetPortfolioSummary(token);
+                }
+                catch (Exception e) {
+                    Console.WriteLine(e);
+                    summary = null;
+                }
                 _loading = false;
                 StateHasChanged();
             }
@@ -36,10 +46,19 @@ namespace StockSim.Frontend.Pages {
                 NavigationManager.NavigateTo("/login");
             }
         }
-        // Cash, holdings and combined totals shown in the portfolio summary cards.
-        private float CashBalance => (float)Math.Round(user.Balance, 2);
-        private float StocksValue => (float)Math.Round(userStocks.Sum(s => s.TotalValue), 2);
-        private float TotalValue => (float)Math.Round(CashBalance + StocksValue, 2);
+        // Cash, holdings and combined totals shown in the portfolio summary cards. The
+        // server-side summary is preferred; the client-side figures are the fallback.
+        private float CashBalance => (float)Math.Round(summary?.Cash ?? user.Balance, 2);
+        private float StocksValue => (float)Math.Round(summary?.MarketValue ?? userStocks.Sum(s => s.TotalValue), 2);
+        private float TotalValue => (float)Math.Round(summary?.TotalValue ?? CashBalance + StocksValue, 2);
+        // Profit already locked in by sales, versus profit still riding on open positions.
+        private float RealizedPnl => (float)Math.Round(summary?.RealizedPnl ?? 0, 2);
+        private float UnrealizedPnl => (float)Math.Round(summary?.UnrealizedPnl ?? 0, 2);
+        private bool HasSummary => summary is not null;
+        private static string PnlClass(float value) => value > 0 ? "pnl-up" : (value < 0 ? "pnl-down" : "pnl-flat");
+        // Breakeven has no sign; a leading "+" on $0.00 reads as a gain that did not happen.
+        private static string FormatSigned(float value) =>
+            value > 0 ? $"+${value.ToString("F2")}" : (value < 0 ? $"-${Math.Abs(value).ToString("F2")}" : "$0.00");
         private void GoToStock(string symbol) {
             // In-app route change; the plain anchor's absolute href used to force a full reload.
             NavigationManager.NavigateTo($"/stock/{symbol}");
