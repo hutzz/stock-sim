@@ -18,6 +18,8 @@ namespace StockSim.Frontend.Pages {
         public float UserStockValue => _userStockValue;
         // X-axis labels are pre-formatted here so the chart never shows raw timestamps with seconds.
         public List<string>? GraphLabels => FormatLabels(Model?.DateTimes, _period);
+        // Hover text carries the full date (and time for intraday), which the axis labels leave out.
+        public List<string>? GraphTooltipTitles => FormatTooltipTitles(Model?.DateTimes, _period);
         protected override async Task OnInitializedAsync() {
             try {
                 await LoadPortfolioFacts();
@@ -137,6 +139,8 @@ namespace StockSim.Frontend.Pages {
             }
         }
         // "Today" keeps hours and minutes but drops seconds; longer ranges drop the time entirely.
+        // The yearly view is weekly data, so it shows the day of the month too - a bare "Jul 26"
+        // repeats four times and gives no clue which week of July a point sits on.
         private static List<string>? FormatLabels(List<string>? rawLabels, string period) {
             if (rawLabels == null) return null;
             var formatted = new List<string>(rawLabels.Count);
@@ -149,11 +153,25 @@ namespace StockSim.Frontend.Pages {
                     "1d" => stamp.ToString("HH:mm"),
                     "7d" => stamp.ToString("MMM d"),
                     "1mo" => stamp.ToString("MMM d"),
-                    "1y" => stamp.ToString("MMM yy"),
+                    "1y" => stamp.ToString("MMM d"),
                     _ => stamp.ToString("yyyy-MM-dd HH:mm")
                 });
             }
             return formatted;
+        }
+        // Axis labels are abbreviated, so the hover tooltip spells out the full date (plus the
+        // time for intraday points) to pin each point to an exact moment.
+        private static List<string>? FormatTooltipTitles(List<string>? rawLabels, string period) {
+            if (rawLabels == null) return null;
+            var titles = new List<string>(rawLabels.Count);
+            foreach (var raw in rawLabels) {
+                if (!DateTime.TryParse(raw, out DateTime stamp)) {
+                    titles.Add(raw);
+                    continue;
+                }
+                titles.Add(period == "1d" ? stamp.ToString("MMM d, yyyy HH:mm") : stamp.ToString("MMM d, yyyy"));
+            }
+            return titles;
         }
     }
 }

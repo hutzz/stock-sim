@@ -2,8 +2,10 @@ let lineChart;
 
 const axisColor = "#38383b";
 const tickColor = "rgba(255, 255, 255, 0.45)";
+// Per-chart hover titles kept out of the chart config so updates can swap them freely.
+const chartTitles = new WeakMap();
 
-window.drawLineGraph = (labels, data) => {
+window.drawLineGraph = (labels, data, titles) => {
 	const ctx = document.getElementById("lineChart");
 	const chartData = {
 		labels: labels,
@@ -42,6 +44,11 @@ window.drawLineGraph = (labels, data) => {
 					cornerRadius: 8,
 					displayColors: false,
 					callbacks: {
+						// Titles come from the server (full date per point); fall back to the axis label.
+						title: (items) => {
+							const t = chartTitles.get(items[0].chart);
+							return (t && t[items[0].dataIndex]) || items[0].label;
+						},
 						label: (item) => `$${Number(item.parsed.y).toFixed(2)}`,
 					},
 				},
@@ -57,6 +64,15 @@ window.drawLineGraph = (labels, data) => {
 						maxRotation: 0,
 						autoSkip: true,
 						maxTicksLimit: 8,
+						// Month/day labels repeat every year, so mark the first tick and each
+						// January with the year to keep a multi-year span readable.
+						callback: function (value, index) {
+							const label = this.getLabelForValue(value);
+							if (!/^[A-Z][a-z]{2} \d+$/.test(label)) return label;
+							const year = chartTitles.get(lineChart)?.[value]?.match(/\d{4}/)?.[0];
+							if (!year) return label;
+							return index === 0 || label.startsWith("Jan") ? `${label}, ${year}` : label;
+						},
 					},
 				},
 				y: {
@@ -73,12 +89,14 @@ window.drawLineGraph = (labels, data) => {
 		},
 	};
 	lineChart = new Chart(ctx, config);
+	chartTitles.set(lineChart, titles);
 };
 
-window.updateLineGraph = (labels, data) => {
+window.updateLineGraph = (labels, data, titles) => {
 	if (lineChart) {
 		lineChart.data.labels = labels;
 		lineChart.data.datasets[0].data = data;
+		chartTitles.set(lineChart, titles);
 		lineChart.update();
 	}
 };

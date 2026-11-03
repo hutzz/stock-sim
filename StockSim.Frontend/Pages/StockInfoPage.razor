@@ -45,7 +45,7 @@
                             <GraphIntervals Active="@_period" SelectInterval="@OnIntervalChange" />
                         </div>
                         <div id="graph-body">
-                            <LineGraph Labels="GraphLabels" Data="Model.Close" />
+                            <LineGraph Labels="GraphLabels" TooltipTitles="GraphTooltipTitles" Data="Model.Close" />
                         </div>
                     </section>
                     <section id="trade-panel" aria-label="Buy and sell this stock">

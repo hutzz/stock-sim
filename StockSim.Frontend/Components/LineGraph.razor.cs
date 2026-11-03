@@ -7,9 +7,12 @@ namespace StockSim.Frontend.Components {
         public List<float>? Data { get; set; }
         [Parameter]
         public List<string>? Labels { get; set; } 
+        // Full date per point for the hover tooltip; axis labels stay short.
+        [Parameter]
+        public List<string>? TooltipTitles { get; set; }
         private async Task DrawGraph() {
             if (Data != null && Labels != null) {
-                await JSRuntime.InvokeVoidAsync("drawLineGraph", Labels, Data);
+                await JSRuntime.InvokeVoidAsync("drawLineGraph", Labels, Data, TooltipTitles);
             }
         }
         protected override async Task OnAfterRenderAsync(bool firstRender) {
@@ -18,7 +21,7 @@ namespace StockSim.Frontend.Components {
             }
         }
         protected override async Task OnParametersSetAsync() {
-            await JSRuntime.InvokeVoidAsync("updateLineGraph", Labels, Data);
+            await JSRuntime.InvokeVoidAsync("updateLineGraph", Labels, Data, TooltipTitles);
         }
     }
 }
