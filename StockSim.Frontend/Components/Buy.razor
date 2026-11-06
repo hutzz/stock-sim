@@ -11,9 +11,14 @@
         <DataAnnotationsValidator />
         <div class="trade-row">
             <label class="trade-label" for="buy-quantity">Quantity to buy</label>
+            @* Plain two-way binding: the generated setter re-renders, which refreshes the
+               estimate below as the quantity is typed. *@
             <InputNumber class="trade-input" id="buy-quantity" @bind-Value="_quantity" placeholder="0" aria-label="Shares to buy" required />
             <button type="submit" class="trade-submit trade-submit-buy">Buy @Symbol</button>
             <ValidationMessage class="trade-validation-message" For="() => stock.Quantity" />
         </div>
+        @* Quotes the cost of the order before it is submitted, naming the session its fill
+           price comes from - that close is not necessarily today's. *@
+        <TradeEstimate FillPrice="@FillPrice" FillDate="@FillDate" Quantity="_quantity" Side="Buy" />
     </EditForm>
 </div>

@@ -31,14 +31,21 @@
                             <input id="stock-search" type="text" @bind="@searchTerm" @bind:event="oninput" placeholder="Search stocks..." autocomplete="off" aria-label="Search stocks" />
                         </form>
                         @if (!string.IsNullOrWhiteSpace(searchTerm)) {
+                            var results = filteredStocks;
                             <ul id="search-results" aria-label="Search results">
-                                @foreach (var stock in filteredStocks) {
+                                @foreach (var stock in results) {
                                     <li>
                                         <a class="result-link" href="/stock/@stock.Ticker" @onclick="() => GoToStock(stock.Ticker)" @onclick:preventDefault="true">
                                             <span class="result-name">@stock.Name</span>
                                             <span class="result-ticker">@stock.Ticker</span>
                                         </a>
                                     </li>
+                                }
+                                @if (_hiddenResults > 0) {
+                                    <li><span class="result-more">@_hiddenResults more matches &mdash; narrow the search to see them</span></li>
+                                }
+                                else if (results.Count == 0) {
+                                    <li><span class="result-more">No company matches that. Press Enter to open it as a ticker.</span></li>
                                 }
                             </ul>
                         }

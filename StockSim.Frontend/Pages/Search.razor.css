@@ -213,6 +213,15 @@
 	color: rgb(214, 226, 252);
 }
 
+/* Footer row of the dropdown: says how many matches were dropped, or that nothing matched. */
+.result-more {
+	display: block;
+	padding: 0.7rem 0.85rem;
+	font-size: 0.82rem;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.55);
+}
+
 .search-hint {
 	margin: 0;
 	font-size: 0.88rem;

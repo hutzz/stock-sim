@@ -37,7 +37,7 @@
                     <section id="ownership-card" aria-label="Shares you own of this stock">
                         <span class="stat-label">Shares owned</span>
                         <span class="stat-value">@_userStockCount</span>
-                        <span class="stat-note">@(_userStockCount > 0 ? $"Worth ${(UserStockValue).ToString("F2")}" : "You do not own any shares yet.")</span>
+                        <span class="stat-note">@OwnershipNote</span>
                     </section>
                     <section id="graph-panel" aria-label="Price history">
                         <div class="panel-header">
@@ -53,9 +53,11 @@
                             <h2 class="panel-title">Trade @Symbol</h2>
                             <span class="panel-meta">Cash in account: $@CashBalance.ToString("F2")</span>
                         </div>
+                        @* Each form quotes the order against the latest settled close and names
+                           the session that close came from - it is not necessarily today's. *@
                         <div id="trade-forms">
-                            <Buy Symbol="@Symbol" OnBuy="@HandleBuy" OnFail="@HandleFail" />
-                            <Sell Symbol="@Symbol" OnSell="@HandleSell" OnFail="@HandleFail" />
+                            <Buy Symbol="@Symbol" FillPrice="@FillPrice" FillDate="@FillDate" OnBuy="@HandleBuy" OnFail="@HandleFail" />
+                            <Sell Symbol="@Symbol" FillPrice="@FillPrice" FillDate="@FillDate" OnSell="@HandleSell" OnFail="@HandleFail" />
                         </div>
                     </section>
                     @if (!string.IsNullOrEmpty(_message)) {

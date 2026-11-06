@@ -1,0 +1,30 @@
+/* Order estimate shown under a trade form. It quotes an amount that comes from a settled
+   session, so it stays visually quieter than the form controls above it. */
+.trade-estimate {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	margin: 0.55rem 0 0;
+	font-size: 0.78rem;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.trade-estimate i {
+	font-size: 0.72rem;
+	color: rgba(255, 255, 255, 0.4);
+}
+
+/* A fill priced on an earlier session is the case worth flagging: the number is real, the
+   day is not today. */
+.trade-estimate-stale {
+	color: rgb(233, 190, 116);
+}
+
+.trade-estimate-stale i {
+	color: rgb(233, 190, 116);
+}
+
+.trade-estimate-session {
+	color: rgba(255, 255, 255, 0.42);
+}

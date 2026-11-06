@@ -22,5 +22,13 @@ namespace StockSim.Frontend.Models {
         public float TotalValue { get; set; }
         [JsonPropertyName("total_return")]
         public float TotalReturn { get; set; }
+        // The trading session the freshest close in the book came from. This is the date
+        // the figures describe, which during an in-progress session is an earlier day.
+        [JsonPropertyName("quote_date")]
+        public string? QuoteDate { get; set; }
+        // Holdings Yahoo has no close for. They sit inside market_value at their average
+        // cost, so the cards have to say that part of the total is not marked to a market.
+        [JsonPropertyName("unquoted_symbols")]
+        public List<string>? UnquotedSymbols { get; set; }
     }
 }

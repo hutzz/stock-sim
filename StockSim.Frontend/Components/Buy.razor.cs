@@ -5,6 +5,12 @@ namespace StockSim.Frontend.Components {
     public partial class Buy {
         [Parameter]
         public string? Symbol { get; set; }
+        // Current fill quote for this symbol, with the session it belongs to. Null when the
+        // exchange has no usable close, which the estimate says outright.
+        [Parameter]
+        public float? FillPrice { get; set; }
+        [Parameter]
+        public string? FillDate { get; set; }
         [Parameter]
         public EventCallback<BuySellDto> OnBuy { get; set; }
         [Parameter]

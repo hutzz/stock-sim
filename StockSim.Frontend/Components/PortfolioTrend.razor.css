@@ -1,0 +1,12 @@
+/* Chart.js needs a sized parent; the canvas fills this box and keeps its aspect ratio. */
+.chart-body {
+	position: relative;
+	width: 100%;
+	height: 260px;
+}
+
+@media (max-width: 480px) {
+	.chart-body {
+		height: 220px;
+	}
+}

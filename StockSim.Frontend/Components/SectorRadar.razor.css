@@ -1,0 +1,20 @@
+/* Chart.js needs a sized parent; the canvas fills this box and keeps its aspect ratio.
+   The radar is mostly thin web lines on the card's blue gradient, so it sits in a dark
+   inset plate - the same tone as the panel behind it - to give the web something to
+   stand out against. */
+.chart-body {
+	position: relative;
+	width: 100%;
+	height: 300px;
+	padding: 0.5rem 0.6rem;
+	box-sizing: border-box;
+	background-color: var(--accent-colour-1);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 10px;
+}
+
+@media (max-width: 480px) {
+	.chart-body {
+		height: 250px;
+	}
+}

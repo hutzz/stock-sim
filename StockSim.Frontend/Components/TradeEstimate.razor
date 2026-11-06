@@ -1,0 +1,15 @@
+@* Quotes an order before it is submitted. A fill always uses the latest settled close, which
+   during an in-progress session belongs to an earlier day, so the estimate names that session
+   next to the amount instead of implying a live market price. *@
+<p class="@(IsStale ? "trade-estimate trade-estimate-stale" : "trade-estimate")" role="note">
+    <i class="fa-solid @(IsStale ? "fa-clock-rotate-left" : "fa-tag")" aria-hidden="true"></i>
+    @if (!HasQuote) {
+        <span>No quote available for this stock right now.</span>
+    }
+    else {
+        <span>@($"{Side} {QuantityText} for {FillTotalText}")</span>
+        @if (SessionLabel.Length > 0) {
+            <span class="trade-estimate-session">@($"({SessionLabel})")</span>
+        }
+    }
+</p>

@@ -37,8 +37,18 @@
 	color: rgba(255, 255, 255, 0.55);
 }
 
-/* Cash / holdings / total split into three cards using the login and register card treatment. */
+/* Cash / holdings / total split into three cards using the login and register card treatment.
+   The group carries a header naming the session its prices come from, so the cards are never
+   read as live numbers when the quotes behind them are from an earlier day. */
 #summary {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.8rem;
+	width: 100%;
+}
+
+.stat-row {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -79,6 +89,37 @@
 	border-color: rgba(75, 115, 227, 0.35);
 }
 
+/* Session stamp under a card figure. Small on purpose: it qualifies the number above it
+   without competing with it for attention. */
+.stat-note {
+	font-size: 0.7rem;
+	letter-spacing: 0.02em;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.45);
+}
+
+/* Carried-at-cost holdings change what the total means, so that caveat gets its own line
+   and a warning tint rather than hiding in a caption. */
+.as-of-note {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0.6rem 0.9rem;
+	font-size: 0.78rem;
+	text-align: center;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	color: rgba(255, 255, 255, 0.7);
+	background-color: rgba(0, 0, 0, 0.25);
+}
+
+.as-of-warning {
+	border-color: rgba(226, 168, 72, 0.4);
+	color: rgb(233, 190, 116);
+}
+
 /* Realized/unrealized totals reuse the stat-card treatment so they read as part of
    the same summary group rather than a new widget type. */
 #pnl {
@@ -111,6 +152,22 @@
 	color: rgba(255, 255, 255, 0.5);
 }
 
+/* Unrealized P&L only means something relative to the quotes it was computed from, so the
+   session behind it travels with the figure. */
+.pnl-meta {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem;
+	font-size: 0.7rem;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.45);
+}
+
+.pnl-caveat {
+	color: rgb(233, 190, 116);
+}
+
 .pnl-up,
 .pnl-down,
 .pnl-flat {
@@ -138,6 +195,65 @@
 	color: rgba(255, 255, 255, 0.48);
 }
 
+/* Charts panel mirrors the holdings panel treatment so the three charts read as one
+   grouped widget between the account cards and the position list. */
+#charts-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+	width: 100%;
+	padding: 1.5rem 1.5rem 1.75rem;
+	box-sizing: border-box;
+	background-color: var(--accent-colour-1);
+	border: 1px solid rgba(255, 255, 255, 0.07);
+	border-radius: 14px;
+	box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+}
+
+.chart-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.9rem;
+}
+
+/* Cards reuse the holding tile gradient; the wide trend card spans the full row. */
+.chart-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	flex: 1 1 300px;
+	min-width: 0;
+	padding: 1rem 1.1rem 1.05rem;
+	background-image: linear-gradient(160deg, rgb(52, 71, 102) 0%, rgb(38, 51, 76) 100%);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 12px;
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+}
+
+.chart-card-wide {
+	flex: 1 1 100%;
+}
+
+.chart-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.6rem;
+	flex-wrap: wrap;
+}
+
+.chart-title {
+	margin: 0;
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: var(--main-font-colour);
+}
+
+.chart-subtitle {
+	font-size: 0.72rem;
+	color: rgba(255, 255, 255, 0.48);
+}
+
 #holdings-panel {
 	display: flex;
 	flex-direction: column;
@@ -151,7 +267,8 @@
 	box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
 }
 
-#panel-header {
+#panel-header,
+.panel-header {
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
@@ -259,6 +376,21 @@
 .stock-per-share {
 	font-size: 0.7rem;
 	color: rgba(255, 255, 255, 0.42);
+}
+
+/* Session stamp for a tile's price. The freshest settled close is routinely from an earlier
+   day, so each tile names the session its price belongs to. */
+.stock-asof {
+	margin: 0;
+	font-size: 0.68rem;
+	color: rgba(255, 255, 255, 0.42);
+}
+
+/* A holding Yahoo has no close for is counted at average cost; say that in place of a price
+   rather than showing a number that looks like a quote. */
+.stock-price-unquoted .stock-unit-price {
+	font-size: 0.92rem;
+	color: rgb(233, 190, 116);
 }
 
 .stock-bottom {

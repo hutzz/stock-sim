@@ -33,19 +33,43 @@
                         <h1 class="title">Welcome, @user.Username!</h1>
                         <p class="subtitle">Here's how your portfolio is doing today.</p>
                     </header>
+                    @* Every price-derived figure here is stamped with the session its quotes
+                       came from: Yahoo has no settled close for an in-progress session, a
+                       weekend or a holiday, so these numbers are routinely from an earlier day. *@
                     <section id="summary" aria-label="Account summary">
-                        <div class="stat-card">
-                            <span class="stat-label">Cash in account</span>
-                            <span class="stat-value">$@CashBalance.ToString("F2")</span>
+                        <div class="panel-header">
+                            <h2 class="panel-title">Account summary</h2>
+                            <span class="panel-meta">@SummaryMeta</span>
                         </div>
-                        <div class="stat-card">
-                            <span class="stat-label">Value of stocks owned</span>
-                            <span class="stat-value">$@StocksValue.ToString("F2")</span>
+                        <div class="stat-row">
+                            <div class="stat-card">
+                                <span class="stat-label">Cash in account</span>
+                                <span class="stat-value">$@CashBalance.ToString("F2")</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-label">Value of stocks owned</span>
+                                <span class="stat-value">$@StocksValue.ToString("F2")</span>
+                                @if (HasCostBasisHoldings) {
+                                    <span class="stat-note">Includes @(UnquotedSymbols.Count) at cost &mdash; no quote</span>
+                                }
+                                else if (HasQuoteDate) {
+                                    <span class="stat-note">@QuoteDateLabel close</span>
+                                }
+                            </div>
+                            <div class="stat-card stat-card-total">
+                                <span class="stat-label">Total account value</span>
+                                <span class="stat-value">$@TotalValue.ToString("F2")</span>
+                                @if (HasQuoteDate) {
+                                    <span class="stat-note">@(QuoteIsStale ? $"Marked to {@QuoteDateLabel}" : "Marked to today's close")</span>
+                                }
+                            </div>
                         </div>
-                        <div class="stat-card stat-card-total">
-                            <span class="stat-label">Total account value</span>
-                            <span class="stat-value">$@TotalValue.ToString("F2")</span>
-                        </div>
+                        @if (HasCostBasisHoldings) {
+                            <p class="as-of-note as-of-warning" role="note">
+                                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                                @CostBasisNote
+                            </p>
+                        }
                     </section>
                     @if (HasSummary) {
                         <section id="pnl" aria-label="Profit and loss">
@@ -56,9 +80,68 @@
                             <div class="pnl-row">
                                 <span class="pnl-label">Unrealized profit &amp; loss</span>
                                 <span class="@PnlClass(UnrealizedPnl)">@FormatSigned(UnrealizedPnl)</span>
+                                <span class="pnl-meta">
+                                    @if (!string.IsNullOrWhiteSpace(AsOfText)) {
+                                        <span>@AsOfText</span>
+                                    }
+                                    @if (HasCostBasisHoldings) {
+                                        <span class="pnl-caveat">excludes @(UnquotedSymbols.Count) at cost</span>
+                                    }
+                                </span>
                             </div>
                         </section>
                     }
+                    @* Charts sit between the account value cards and the holdings list: they
+                       summarise the shape of the portfolio before the individual positions. *@
+                    <section id="charts-panel" aria-label="Portfolio charts">
+                        <div class="panel-header">
+                            <h2 class="panel-title">Portfolio at a glance</h2>
+                            <span class="panel-meta">@(HasSectorCharts ? $"{sectorNames.Length} {(sectorNames.Length == 1 ? "industry" : "industries")}" : "No industries yet")</span>
+                        </div>
+                        @if (_loading) {
+                            <p class="empty-note">Loading your charts&hellip;</p>
+                        }
+                        else {
+                            <div class="chart-grid">
+                                <div class="chart-card">
+                                    <div class="chart-head">
+                                        <h3 class="chart-title">Industry exposure</h3>
+                                        <span class="chart-subtitle">Share of holdings by sector</span>
+                                    </div>
+                                    @if (HasSectorCharts) {
+                                        <SectorRadar Labels="@sectorNames" Shares="@sectorShares" Holdings="@sectorHoldings" />
+                                    }
+                                    else {
+                                        <p class="empty-note">Buy a stock to see where your money is concentrated.</p>
+                                    }
+                                </div>
+                                <div class="chart-card">
+                                    <div class="chart-head">
+                                        <h3 class="chart-title">Top positions</h3>
+                                        <span class="chart-subtitle">@PieSubtitle</span>
+                                    </div>
+                                    @if (HasPositionCharts) {
+                                        <StockPie Labels="@stockLabels" Values="@stockValues" Sectors="@stockSectors" />
+                                    }
+                                    else {
+                                        <p class="empty-note">Nothing owned yet.</p>
+                                    }
+                                </div>
+                                <div class="chart-card chart-card-wide">
+                                    <div class="chart-head">
+                                        <h3 class="chart-title">Portfolio trend</h3>
+                                        <span class="chart-subtitle">@TrendMeta</span>
+                                    </div>
+                                    @if (HasTrendChart) {
+                                        <PortfolioTrend Labels="@trendLabels" Totals="@trendTotals" />
+                                    }
+                                    else {
+                                        <p class="empty-note">Daily snapshots start building as you visit the dashboard.</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </section>
                     <section id="holdings-panel" aria-label="Stocks you own">
                         <div id="panel-header">
                             <h2 class="panel-title">Your holdings</h2>
@@ -78,10 +161,19 @@
                                             <h3 class="stock-symbol">@stock.Symbol</h3>
                                             <span class="stock-quantity">@($"{stock.Quantity} owned")</span>
                                         </div>
-                                        <div class="stock-price-row">
-                                            <span class="stock-unit-price">$@Math.Round(stock.Price, 2).ToString("F2")</span>
-                                            <span class="stock-per-share">per share</span>
-                                        </div>
+                                        @if (stock.HasQuote) {
+                                            <div class="stock-price-row">
+                                                <span class="stock-unit-price">$@Math.Round(stock.Price.Value, 2).ToString("F2")</span>
+                                                <span class="stock-per-share">per share</span>
+                                            </div>
+                                            <p class="stock-asof">@TileAsOf(stock)</p>
+                                        }
+                                        else {
+                                            <div class="stock-price-row stock-price-unquoted">
+                                                <span class="stock-unit-price">No quote</span>
+                                                <span class="stock-per-share">at your avg cost</span>
+                                            </div>
+                                        }
                                         @if (stock.AvgCost is not null) {
                                             <div class="stock-cost-row">
                                                 <span class="stock-cost">@($"avg ${Math.Round(stock.AvgCost.Value, 2).ToString("F2")} / sh")</span>
@@ -92,8 +184,8 @@
                                             </div>
                                         }
                                         <div class="stock-bottom">
-                                            <span class="stock-value">$@stock.TotalValue.ToString("F2")</span>
-                                            <span class="@trendClass" title="Change in unit price since the previous close">
+                                            <span class="stock-value">$@TileValue(stock).ToString("F2")</span>
+                                            <span class="@trendClass" title="@TileTrendTitle(stock)">
                                                 <i class="fa-solid @trendIcon" aria-hidden="true"></i>
                                                 @if (change is not null) {
                                                     <span class="trend-text">@($"{(change >= 0 ? "+" : "")}{change.Value.ToString("F2")} / sh")</span>

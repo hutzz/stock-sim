@@ -1,10 +1,17 @@
 using Microsoft.AspNetCore.Components;
 using StockSim.Frontend.Models;
+using StockSim.Frontend.Services;
 
 namespace StockSim.Frontend.Pages {
     public partial class StockInfoPage {
         private int _userStockCount;
         private float _userStockValue;
+        // Whether this position has a real quote, and the session that quote came from.
+        // Without them "Worth $X" reads as a live number when it is a cost-basis figure.
+        private bool _userHasQuote;
+        private string? _userQuoteDate;
+        // The price an order on this symbol fills at, shown on the trade forms before submit.
+        private QuoteModel? _quote;
         private float _cashBalance;
         private string _message = "";
         private bool _messageIsSuccess;
@@ -23,9 +30,10 @@ namespace StockSim.Frontend.Pages {
         protected override async Task OnInitializedAsync() {
             try {
                 await LoadPortfolioFacts();
-                _name = await SearchService.GetNameByTicker("data.txt", Symbol);
+                _name = await SearchService.GetNameByTicker(Symbol);
                 StockDto stockDto = new() { Symbol=Symbol, Period=_period, Interval="1h" };
                 Model = await StockService.GetStockData(stockDto);
+                await LoadFillQuote();
                 StateHasChanged();
             }
             catch (Exception e) {
@@ -46,10 +54,17 @@ namespace StockSim.Frontend.Pages {
                     UserStockModel? stockMatchingSymbol = userStocks.FirstOrDefault(sym => sym?.Symbol?.ToLower() == Symbol?.ToLower());
                     if (stockMatchingSymbol != null) {
                         _userStockCount = stockMatchingSymbol.Quantity;
-                        _userStockValue = stockMatchingSymbol.TotalValue;
+                        _userHasQuote = stockMatchingSymbol.HasQuote;
+                        _userQuoteDate = stockMatchingSymbol.PriceDate;
+                        // No quote means the position is carried at what it cost, which is not
+                        // a market value and has to be labelled as such.
+                        _userStockValue = (float)Math.Round(
+                            stockMatchingSymbol.MarketValue ?? stockMatchingSymbol.CostBasisValue ?? 0f, 2);
                     }
                     else {
                         _userStockCount = 0;
+                        _userHasQuote = false;
+                        _userQuoteDate = null;
                         _userStockValue = 0f;
                     }
                 }
@@ -81,6 +96,48 @@ namespace StockSim.Frontend.Pages {
                 NavigationManager.NavigateTo("/dashboard");
             }
         }
+        // The price an order here fills at, shown on the trade forms before submitting. It is
+        // the latest settled close, which during an in-progress session belongs to an earlier
+        // day - so the form names that day instead of implying a live market price.
+        private async Task LoadFillQuote() {
+            _quote = null;
+            if (string.IsNullOrWhiteSpace(Symbol)) return;
+            try {
+                var token = await TokenService.GetAccessTokenAsync();
+                _quote = await StockService.GetQuote(token, Symbol!);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
+                _quote = null;
+            }
+        }
+        private bool HasFillQuote => _quote?.Price is not null;
+        // Fill price and its session passed to the trade forms, which quote each order
+        // against them before it is submitted. A fill always uses a settled session's close,
+        // so during an in-progress session the number is an earlier day's, not today's.
+        private float? FillPrice => _quote?.Price;
+        private string? FillDate => _quote?.PriceDate;
+        // Explains what "Worth $X" on the ownership card is based on.
+        private string OwnershipNote {
+            get {
+                if (_userStockCount == 0) return "You do not own any shares yet.";
+                if (!_userHasQuote) return $"Worth {_userStockValue.ToString("F2")} at your average cost — no market quote.";
+                var age = MarketClock.QuoteAge(_userQuoteDate);
+                return age.Length == 0
+                    ? $"Worth {_userStockValue.ToString("F2")}"
+                    : $"Worth {_userStockValue.ToString("F2")} — {age}";
+            }
+        }
+        // Confirmation text names the price the order filled at and its session, so a fill
+        // during an in-progress session is not read as happening at today's price.
+        private static string FillSummary(Message response, string fallback) {
+            if (response.FilledPrice is null) return fallback;
+            var price = $"${Math.Round(response.FilledPrice.Value, 2).ToString("F2")}";
+            var age = MarketClock.QuoteAge(response.FillDate);
+            return age.Length == 0
+                ? $"{fallback} Filled at {price}."
+                : $"{fallback} Filled at {price}, {age}.";
+        }
         private async Task HandleBuy(BuySellDto stock) {
             await TokenService.CheckToken();
             try {
@@ -88,7 +145,8 @@ namespace StockSim.Frontend.Pages {
                 var response = await StockService.BuyStock(token, stock);
                 await LoadPortfolioFacts();
                 await RefreshGraph("1d", "1h");
-                await ShowMessage(response.Msg!, isSuccess: true);
+                await LoadFillQuote();
+                await ShowMessage(FillSummary(response, response.Msg ?? "Order placed."), isSuccess: true);
                 StateHasChanged();
             }
             catch (Exception e) {
@@ -103,7 +161,8 @@ namespace StockSim.Frontend.Pages {
                 var response = await StockService.SellStock(token, stock);
                 await LoadPortfolioFacts();
                 await RefreshGraph("1d", "1h");
-                await ShowMessage(response.Msg!, isSuccess: true);
+                await LoadFillQuote();
+                await ShowMessage(FillSummary(response, response.Msg ?? "Order placed."), isSuccess: true);
                 StateHasChanged();
             }
             catch (Exception e) {
